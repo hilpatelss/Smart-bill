@@ -1,0 +1,50 @@
+*{
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+}
+
+.signin_page{
+    height: 100vh;
+    width: 100%;
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.signin_box{
+    height: max-content;
+    width: max-content;
+    border: 1px solid black;
+    padding: 10px;
+    border-radius: 15px;
+}
+
+.signin_box ul{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: max-content;
+    width: max-content;
+    border: 1px solid black;
+    flex-direction: column;
+    list-style-type: none;
+    padding: 1px ;
+}
+
+.signin_box li{
+    display: flex;
+    justify-content:space-around;
+    align-items: center;
+    width: 100%;
+    border: 1px solid black;
+    margin: 5px 5px;
+    flex-direction: row;
+    list-style-type: none;
+}
+.signin_box input[type="submit"] ,input[type="button"]{
+    border: 1px solid black;
+    height: 100%;
+    width: 100%;
+    padding: 1px;
+}
