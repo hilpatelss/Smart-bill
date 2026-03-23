@@ -1,996 +1,527 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BillMate – Smart Billing & Invoice Management</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartBill – Smart Billing & Invoice Management</title>
 
   <!-- Bootstrap 5 CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
   <!-- Bootstrap Icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
   <!-- Google Fonts: Plus Jakarta Sans -->
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-
-  <style>
-    /* ── Design tokens ── */
-    :root {
-      --brand:      #2563eb;
-      --brand-dark: #1d4ed8;
-      --navy:       #0f172a;
-      --navy-light: #1e293b;
-      --body-bg:    #f8fafc;
-      --border:     #e2e8f0;
-      --text:       #1e293b;
-      --muted:      #64748b;
-      --font:       'Plus Jakarta Sans', sans-serif;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: var(--font);
-      background: var(--body-bg);
-      color: var(--text);
-      margin: 0;
-    }
-
-    /* ══════════════════════════════════════════
-       NAVBAR
-    ══════════════════════════════════════════ */
-    .navbar {
-      background: rgba(15, 23, 42, 0.97);
-      backdrop-filter: blur(12px);
-      padding: .9rem 0;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      border-bottom: 1px solid rgba(255,255,255,.06);
-    }
-    .navbar-brand {
-      font-weight: 800;
-      font-size: 1.2rem;
-      color: #fff !important;
-      display: flex;
-      align-items: center;
-      gap: .5rem;
-    }
-    .brand-icon-sm {
-      width: 30px; height: 30px;
-      background: var(--brand);
-      border-radius: 7px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: .9rem;
-    }
-    .navbar-nav .nav-link {
-      color: rgba(255,255,255,.65) !important;
-      font-weight: 500;
-      font-size: .875rem;
-      padding: .4rem .85rem !important;
-      transition: color .15s;
-    }
-    .navbar-nav .nav-link:hover { color: #fff !important; }
-    .navbar-toggler { border-color: rgba(255,255,255,.2); }
-    .navbar-toggler-icon { filter: invert(1); }
-
-    /* ══════════════════════════════════════════
-       HERO SECTION
-    ══════════════════════════════════════════ */
-    .hero {
-      background: var(--navy);
-      padding: 6rem 0 5rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Decorative background grid pattern */
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(37,99,235,.07) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(37,99,235,.07) 1px, transparent 1px);
-      background-size: 48px 48px;
-    }
-
-    /* Blue glowing blob — top right */
-    .hero::after {
-      content: '';
-      position: absolute;
-      top: -120px; right: -120px;
-      width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(37,99,235,.25) 0%, transparent 70%);
-      border-radius: 50%;
-    }
-
-    .hero-content { position: relative; z-index: 1; }
-
-    /* Badge pill above headline */
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: .4rem;
-      background: rgba(37,99,235,.15);
-      border: 1px solid rgba(37,99,235,.3);
-      color: #93c5fd;
-      font-size: .78rem;
-      font-weight: 600;
-      padding: .35rem .9rem;
-      border-radius: 99px;
-      margin-bottom: 1.5rem;
-      letter-spacing: .02em;
-    }
-    .hero-badge .dot {
-      width: 6px; height: 6px;
-      background: #4ade80;
-      border-radius: 50%;
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0%,100% { opacity: 1; transform: scale(1); }
-      50%      { opacity: .5; transform: scale(1.4); }
-    }
-
-    .hero h1 {
-      font-size: clamp(2.2rem, 5vw, 3.5rem);
-      font-weight: 800;
-      color: #fff;
-      line-height: 1.1;
-      margin-bottom: 1.25rem;
-    }
-    .hero h1 .accent { color: var(--brand); }
-
-    .hero p {
-      color: rgba(255,255,255,.6);
-      font-size: 1.05rem;
-      max-width: 520px;
-      line-height: 1.7;
-      margin-bottom: 2rem;
-    }
-
-    /* CTA button group */
-    .btn-hero-primary {
-      background: var(--brand);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      padding: .75rem 1.75rem;
-      font-weight: 700;
-      font-size: .95rem;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: .5rem;
-      transition: background .15s, transform .12s, box-shadow .15s;
-      box-shadow: 0 4px 18px rgba(37,99,235,.4);
-    }
-    .btn-hero-primary:hover {
-      background: var(--brand-dark);
-      color: #fff;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 24px rgba(37,99,235,.5);
-    }
-    .btn-hero-ghost {
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.8);
-      border: 1px solid rgba(255,255,255,.15);
-      border-radius: 10px;
-      padding: .75rem 1.75rem;
-      font-weight: 600;
-      font-size: .95rem;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: .5rem;
-      transition: background .15s, color .15s;
-    }
-    .btn-hero-ghost:hover {
-      background: rgba(255,255,255,.12);
-      color: #fff;
-    }
-
-    /* Social proof bar below CTA */
-    .social-proof {
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-      margin-top: 2rem;
-      flex-wrap: wrap;
-    }
-    .proof-avatars {
-      display: flex;
-    }
-    .proof-avatar {
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      border: 2px solid var(--navy);
-      margin-right: -8px;
-      font-size: .65rem;
-      font-weight: 700;
-      color: #fff;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .proof-text { font-size: .8rem; color: rgba(255,255,255,.5); }
-    .proof-text strong { color: rgba(255,255,255,.8); }
-
-    /* Hero right: mock dashboard card */
-    .hero-card {
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 24px 64px rgba(0,0,0,.4);
-    }
-    .hero-card-bar {
-      background: rgba(255,255,255,.05);
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      padding: .65rem 1rem;
-      display: flex;
-      align-items: center;
-      gap: .4rem;
-    }
-    .dot-btn {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-    }
-    .hero-card-body { padding: 1.25rem; }
-    .mock-stat-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: .65rem;
-      margin-bottom: .85rem;
-    }
-    .mock-stat {
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 10px;
-      padding: .75rem;
-    }
-    .mock-stat .lbl { font-size: .65rem; color: rgba(255,255,255,.4); margin-bottom: .2rem; }
-    .mock-stat .val { font-size: 1rem; font-weight: 700; color: #fff; }
-    .mock-stat .chg { font-size: .65rem; color: #4ade80; }
-    /* Mini chart bars inside hero card */
-    .mini-chart {
-      display: flex;
-      align-items: flex-end;
-      gap: 4px;
-      height: 50px;
-      padding: .5rem;
-      background: rgba(255,255,255,.03);
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,.06);
-    }
-    .mini-bar {
-      flex: 1;
-      background: rgba(37,99,235,.5);
-      border-radius: 3px 3px 0 0;
-    }
-    .mini-bar.active { background: var(--brand); }
-    /* Invoice rows in hero card */
-    .mock-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: .45rem 0;
-      border-bottom: 1px solid rgba(255,255,255,.06);
-      font-size: .75rem;
-    }
-    .mock-row:last-child { border-bottom: none; }
-    .mock-row .name  { color: rgba(255,255,255,.7); }
-    .mock-row .amt   { color: #fff; font-weight: 600; }
-    .mock-row .badge { background: rgba(74,222,128,.15); color: #4ade80; font-size: .6rem; padding: 1px 7px; border-radius: 99px; }
-
-    /* ══════════════════════════════════════════
-       STATS STRIP
-    ══════════════════════════════════════════ */
-    .stats-strip {
-      background: #fff;
-      border-bottom: 1px solid var(--border);
-      padding: 2rem 0;
-    }
-    .stat-item { text-align: center; }
-    .stat-num {
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: var(--text);
-      line-height: 1;
-    }
-    .stat-desc { font-size: .82rem; color: var(--muted); margin-top: .25rem; }
-
-    /* ══════════════════════════════════════════
-       FEATURES SECTION
-    ══════════════════════════════════════════ */
-    .section { padding: 5rem 0; }
-    .section-tag {
-      font-size: .72rem;
-      font-weight: 700;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--brand);
-      margin-bottom: .6rem;
-    }
-    .section-title {
-      font-size: clamp(1.6rem, 3vw, 2.2rem);
-      font-weight: 800;
-      line-height: 1.2;
-      margin-bottom: 1rem;
-    }
-    .section-sub {
-      color: var(--muted);
-      font-size: .95rem;
-      max-width: 520px;
-      line-height: 1.7;
-    }
-
-    .feature-card {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.5rem;
-      height: 100%;
-      transition: box-shadow .2s, transform .2s, border-color .2s;
-    }
-    .feature-card:hover {
-      box-shadow: 0 8px 32px rgba(37,99,235,.1);
-      border-color: #bfdbfe;
-      transform: translateY(-3px);
-    }
-    .feature-icon {
-      width: 48px; height: 48px;
-      border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.3rem;
-      margin-bottom: 1rem;
-    }
-    .feature-card h5 { font-size: .95rem; font-weight: 700; margin-bottom: .5rem; }
-    .feature-card p  { font-size: .85rem; color: var(--muted); line-height: 1.65; margin: 0; }
-
-    /* ══════════════════════════════════════════
-       HOW IT WORKS
-    ══════════════════════════════════════════ */
-    .steps-section { background: var(--navy); padding: 5rem 0; }
-    .step-num {
-      width: 40px; height: 40px;
-      background: var(--brand);
-      color: #fff;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 800;
-      font-size: .95rem;
-      flex-shrink: 0;
-    }
-    .step-card {
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 14px;
-      padding: 1.75rem;
-      height: 100%;
-    }
-    .step-card h5 { color: #fff; font-weight: 700; font-size: .95rem; margin: .75rem 0 .5rem; }
-    .step-card p  { color: rgba(255,255,255,.5); font-size: .85rem; line-height: 1.65; margin: 0; }
-
-    /* ══════════════════════════════════════════
-       PRICING
-    ══════════════════════════════════════════ */
-    .pricing-card {
-      background: #fff;
-      border: 2px solid var(--border);
-      border-radius: 16px;
-      padding: 2rem;
-      height: 100%;
-      transition: border-color .2s, box-shadow .2s;
-    }
-    .pricing-card.featured {
-      border-color: var(--brand);
-      box-shadow: 0 8px 40px rgba(37,99,235,.15);
-    }
-    .pricing-card .plan-name { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: .4rem; }
-    .pricing-card .price { font-size: 2.4rem; font-weight: 800; line-height: 1; }
-    .pricing-card .price sup { font-size: 1.2rem; vertical-align: top; margin-top: .4rem; }
-    .pricing-card .price .period { font-size: .85rem; font-weight: 500; color: var(--muted); }
-    .pricing-card .desc { font-size: .85rem; color: var(--muted); margin: .75rem 0 1.5rem; }
-    .price-features { list-style: none; padding: 0; margin: 0 0 1.75rem; }
-    .price-features li {
-      display: flex;
-      align-items: center;
-      gap: .6rem;
-      font-size: .875rem;
-      padding: .4rem 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .price-features li:last-child { border-bottom: none; }
-    .price-features li i { color: #16a34a; }
-    .price-features li.off i { color: #cbd5e1; }
-    .price-features li.off { color: #94a3b8; }
-    .popular-badge {
-      background: var(--brand);
-      color: #fff;
-      font-size: .68rem;
-      font-weight: 700;
-      padding: 3px 10px;
-      border-radius: 99px;
-      margin-left: .5rem;
-    }
-
-    /* ══════════════════════════════════════════
-       TESTIMONIALS
-    ══════════════════════════════════════════ */
-    .testimonial-section { background: #f1f5f9; padding: 5rem 0; }
-    .testi-card {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.5rem;
-      height: 100%;
-    }
-    .testi-stars { color: #f59e0b; font-size: .85rem; margin-bottom: .75rem; }
-    .testi-text  { font-size: .88rem; color: var(--text); line-height: 1.7; margin-bottom: 1rem; font-style: italic; }
-    .testi-author { display: flex; align-items: center; gap: .65rem; }
-    .testi-avatar {
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      color: #fff;
-      font-weight: 700;
-      font-size: .8rem;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-    .testi-name { font-weight: 700; font-size: .85rem; }
-    .testi-role { font-size: .75rem; color: var(--muted); }
-
-    /* ══════════════════════════════════════════
-       CTA BANNER
-    ══════════════════════════════════════════ */
-    .cta-section {
-      background: var(--brand);
-      padding: 5rem 0;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .cta-section::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
-      background-size: 40px 40px;
-    }
-    .cta-section h2 { color: #fff; font-size: 2rem; font-weight: 800; position: relative; }
-    .cta-section p  { color: rgba(255,255,255,.8); max-width: 480px; margin: .75rem auto 2rem; position: relative; font-size: .95rem; }
-    .btn-cta-white {
-      background: #fff;
-      color: var(--brand);
-      border: none;
-      border-radius: 10px;
-      padding: .75rem 2rem;
-      font-weight: 700;
-      font-size: .95rem;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: .5rem;
-      position: relative;
-      transition: transform .15s, box-shadow .15s;
-      box-shadow: 0 4px 16px rgba(0,0,0,.15);
-    }
-    .btn-cta-white:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.2); color: var(--brand); }
-
-    /* ══════════════════════════════════════════
-       FOOTER
-    ══════════════════════════════════════════ */
-    .footer {
-      background: var(--navy);
-      color: rgba(255,255,255,.5);
-      padding: 3rem 0 2rem;
-    }
-    .footer-brand { color: #fff; font-weight: 800; font-size: 1.1rem; display: flex; align-items: center; gap: .5rem; }
-    .footer-tagline { font-size: .82rem; margin-top: .4rem; color: rgba(255,255,255,.4); }
-    .footer-heading { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: rgba(255,255,255,.6); margin-bottom: .75rem; }
-    .footer-links { list-style: none; padding: 0; margin: 0; }
-    .footer-links li { margin-bottom: .4rem; }
-    .footer-links a { color: rgba(255,255,255,.45); text-decoration: none; font-size: .85rem; transition: color .15s; }
-    .footer-links a:hover { color: #fff; }
-    .footer-bottom {
-      border-top: 1px solid rgba(255,255,255,.08);
-      margin-top: 2.5rem;
-      padding-top: 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: .5rem;
-      font-size: .8rem;
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet" />
 </head>
+
 <body>
 
-<!-- ══════════════════════════════════════════
+  <!-- ══════════════════════════════════════════
      NAVBAR
 ══════════════════════════════════════════ -->
-<nav class="navbar navbar-expand-lg">
-  <div class="container">
-    <a class="navbar-brand" href="index.html">
-      <span class="brand-icon-sm"><i class="bi bi-receipt-cutoff"></i></span>
-      BillMate
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navMenu">
-      <ul class="navbar-nav mx-auto">
-        <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
-        <li class="nav-item"><a class="nav-link" href="#how-it-works">How it Works</a></li>
-        <li class="nav-item"><a class="nav-link" href="#pricing">Pricing</a></li>
-        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
-      </ul>
-      <div class="d-flex gap-2 mt-2 mt-lg-0">
-        <a href="login.html" class="btn btn-sm btn-outline-light" style="border-radius:8px;font-weight:600">Login</a>
-        <a href="signup.html" class="btn btn-sm btn-primary" style="border-radius:8px;font-weight:700">Get Started Free</a>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <span class="brand-icon-sm"><i class="bi bi-receipt-cutoff"></i></span>
+        SmartBill
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+          <li class="nav-item"><a class="nav-link" href="#how-it-works">How it Works</a></li>
+          <li class="nav-item"><a class="nav-link" href="#pricing">Pricing</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+        </ul>
+        <div class="d-flex gap-2 mt-2 mt-lg-0">
+          <a href="login.html" class="btn btn-sm btn-outline-light" style="border-radius:8px;font-weight:600">Login</a>
+          <a href="signup.html" class="btn btn-sm btn-primary" style="border-radius:8px;font-weight:700">Get Started
+            Free</a>
+        </div>
       </div>
     </div>
-  </div>
-</nav>
+  </nav>
 
 
-<!-- ══════════════════════════════════════════
+  <!-- ══════════════════════════════════════════
      HERO SECTION
 ══════════════════════════════════════════ -->
-<section class="hero">
-  <div class="container">
-    <div class="row align-items-center g-5">
+  <section class="hero">
+    <div class="container">
+      <div class="row align-items-center g-5">
 
-      <!-- Left: headline + CTA -->
-      <div class="col-lg-6 hero-content">
-        <div class="hero-badge">
-          <span class="dot"></span>
-          Now with auto GST calculation
-        </div>
-        <h1>
-          Billing that works<br/>
-          as fast as <span class="accent">you do</span>
-        </h1>
-        <p>
-          Create professional invoices, manage customers and products,
-          track payments, and get business insights — all in one place.
-          No accounting degree needed.
-        </p>
-        <div class="d-flex flex-wrap gap-3">
-          <a href="signup.html" class="btn-hero-primary">
-            <i class="bi bi-rocket-takeoff"></i> Start for Free
-          </a>
-          <a href="#how-it-works" class="btn-hero-ghost">
-            <i class="bi bi-play-circle"></i> See how it works
-          </a>
+        <!-- Left: headline + CTA -->
+        <div class="col-lg-6 hero-content">
+          <div class="hero-badge">
+            <span class="dot"></span>
+            Now with auto GST calculation
+          </div>
+          <h1>
+            Billing that works<br />
+            as fast as <span class="accent">you do</span>
+          </h1>
+          <p>
+            Create professional invoices, manage customers and products,
+            track payments, and get business insights — all in one place.
+            No accounting degree needed.
+          </p>
+          <div class="d-flex flex-wrap gap-3">
+            <a href="signup.html" class="btn-hero-primary">
+              <i class="bi bi-rocket-takeoff"></i> Start for Free
+            </a>
+            <a href="#how-it-works" class="btn-hero-ghost">
+              <i class="bi bi-play-circle"></i> See how it works
+            </a>
+          </div>
+
+          <!-- Social proof -->
+          <div class="social-proof">
+            <div class="proof-avatars">
+              <div class="proof-avatar" style="background:#2563eb">RS</div>
+              <div class="proof-avatar" style="background:#d97706">PM</div>
+              <div class="proof-avatar" style="background:#16a34a">AK</div>
+              <div class="proof-avatar" style="background:#9333ea">SJ</div>
+            </div>
+            <div class="proof-text">
+              Trusted by <strong>2,400+</strong> small businesses across India
+            </div>
+          </div>
         </div>
 
-        <!-- Social proof -->
-        <div class="social-proof">
-          <div class="proof-avatars">
-            <div class="proof-avatar" style="background:#2563eb">RS</div>
-            <div class="proof-avatar" style="background:#d97706">PM</div>
-            <div class="proof-avatar" style="background:#16a34a">AK</div>
-            <div class="proof-avatar" style="background:#9333ea">SJ</div>
-          </div>
-          <div class="proof-text">
-            Trusted by <strong>2,400+</strong> small businesses across India
-          </div>
-        </div>
-      </div>
-
-      <!-- Right: mock dashboard card -->
-      <div class="col-lg-6 hero-content">
-        <div class="hero-card">
-          <!-- Fake window chrome -->
-          <div class="hero-card-bar">
-            <div class="dot-btn" style="background:#ef4444"></div>
-            <div class="dot-btn" style="background:#f59e0b"></div>
-            <div class="dot-btn" style="background:#22c55e"></div>
-            <div class="ms-2" style="font-size:.7rem;color:rgba(255,255,255,.3)">BillMate Dashboard</div>
-          </div>
-          <div class="hero-card-body">
-            <!-- 2 stat boxes -->
-            <div class="mock-stat-row">
-              <div class="mock-stat">
-                <div class="lbl">Today's Sales</div>
-                <div class="val">₹ 4,850</div>
-                <div class="chg">↑ 12% vs yesterday</div>
+        <!-- Right: mock dashboard card -->
+        <div class="col-lg-6 hero-content">
+          <div class="hero-card">
+            <!-- Fake window chrome -->
+            <div class="hero-card-bar">
+              <div class="dot-btn" style="background:#ef4444"></div>
+              <div class="dot-btn" style="background:#f59e0b"></div>
+              <div class="dot-btn" style="background:#22c55e"></div>
+              <div class="ms-2" style="font-size:.7rem;color:rgba(255,255,255,.3)">SmartBill Dashboard</div>
+            </div>
+            <div class="hero-card-body">
+              <!-- 2 stat boxes -->
+              <div class="mock-stat-row">
+                <div class="mock-stat">
+                  <div class="lbl">Today's Sales</div>
+                  <div class="val">₹ 4,850</div>
+                  <div class="chg">↑ 12% vs yesterday</div>
+                </div>
+                <div class="mock-stat">
+                  <div class="lbl">Monthly</div>
+                  <div class="val">₹ 1.24L</div>
+                  <div class="chg">↑ 8% this month</div>
+                </div>
               </div>
-              <div class="mock-stat">
-                <div class="lbl">Monthly</div>
-                <div class="val">₹ 1.24L</div>
-                <div class="chg">↑ 8% this month</div>
+              <!-- Mini bar chart -->
+              <div class="mini-chart mb-3">
+                <div class="mini-bar" style="height:45%"></div>
+                <div class="mini-bar" style="height:70%"></div>
+                <div class="mini-bar" style="height:55%"></div>
+                <div class="mini-bar" style="height:90%"></div>
+                <div class="mini-bar" style="height:65%"></div>
+                <div class="mini-bar active" style="height:100%"></div>
+                <div class="mini-bar" style="height:40%"></div>
               </div>
-            </div>
-            <!-- Mini bar chart -->
-            <div class="mini-chart mb-3">
-              <div class="mini-bar" style="height:45%"></div>
-              <div class="mini-bar" style="height:70%"></div>
-              <div class="mini-bar" style="height:55%"></div>
-              <div class="mini-bar" style="height:90%"></div>
-              <div class="mini-bar" style="height:65%"></div>
-              <div class="mini-bar active" style="height:100%"></div>
-              <div class="mini-bar" style="height:40%"></div>
-            </div>
-            <!-- Recent invoices -->
-            <div style="font-size:.68rem;color:rgba(255,255,255,.3);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.05em">Recent Invoices</div>
-            <div class="mock-row">
-              <span class="name">Rahul Sharma</span>
-              <span class="amt">₹ 1,240</span>
-              <span class="badge">Paid</span>
-            </div>
-            <div class="mock-row">
-              <span class="name">Priya Mehta</span>
-              <span class="amt">₹ 580</span>
-              <span class="badge">Paid</span>
-            </div>
-            <div class="mock-row">
-              <span class="name">Amit Patel</span>
-              <span class="amt">₹ 3,050</span>
-              <span class="badge" style="background:rgba(251,191,36,.15);color:#fbbf24">Pending</span>
+              <!-- Recent invoices -->
+              <div
+                style="font-size:.68rem;color:rgba(255,255,255,.3);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.05em">
+                Recent Invoices</div>
+              <div class="mock-row">
+                <span class="name">Rahul Sharma</span>
+                <span class="amt">₹ 1,240</span>
+                <span class="badge">Paid</span>
+              </div>
+              <div class="mock-row">
+                <span class="name">Priya Mehta</span>
+                <span class="amt">₹ 580</span>
+                <span class="badge">Paid</span>
+              </div>
+              <div class="mock-row">
+                <span class="name">Amit Patel</span>
+                <span class="amt">₹ 3,050</span>
+                <span class="badge" style="background:rgba(251,191,36,.15);color:#fbbf24">Pending</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
 
-<!-- ══════════════════════════════════════════
+  <!-- ══════════════════════════════════════════
      STATS STRIP
 ══════════════════════════════════════════ -->
-<div class="stats-strip">
-  <div class="container">
-    <div class="row g-4 text-center">
-      <div class="col-6 col-md-3">
-        <div class="stat-num">2,400+</div>
-        <div class="stat-desc">Businesses using BillMate</div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="stat-num">₹ 50Cr+</div>
-        <div class="stat-desc">Invoices processed</div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="stat-num">4.9 ★</div>
-        <div class="stat-desc">Average user rating</div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="stat-num">99.9%</div>
-        <div class="stat-desc">Uptime guaranteed</div>
+  <div class="stats-strip">
+    <div class="container">
+      <div class="row g-4 text-center">
+        <div class="col-6 col-md-3">
+          <div class="stat-num">2,400+</div>
+          <div class="stat-desc">Businesses using SmartBill</div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-num">₹ 50Cr+</div>
+          <div class="stat-desc">Invoices processed</div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-num">4.9 ★</div>
+          <div class="stat-desc">Average user rating</div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-num">99.9%</div>
+          <div class="stat-desc">Uptime guaranteed</div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
 
-<!-- ══════════════════════════════════════════
+  <!-- ══════════════════════════════════════════
      FEATURES SECTION
 ══════════════════════════════════════════ -->
-<section class="section" id="features">
-  <div class="container">
-    <div class="text-center mb-5">
-      <div class="section-tag">Features</div>
-      <h2 class="section-title">Everything your business needs</h2>
-      <p class="section-sub mx-auto">
-        From generating your first invoice to tracking monthly revenue —
-        BillMate handles it all without the complexity.
-      </p>
+  <section class="section" id="features">
+    <div class="container">
+      <div class="text-center mb-5">
+        <div class="section-tag">Features</div>
+        <h2 class="section-title">Everything your business needs</h2>
+        <p class="section-sub mx-auto">
+          From generating your first invoice to tracking monthly revenue —
+          SmartBill handles it all without the complexity.
+        </p>
+      </div>
+
+      <div class="row g-4">
+        <!-- Feature 1 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="feature-card">
+            <div class="feature-icon" style="background:#eff6ff;color:#2563eb">
+              <i class="bi bi-file-earmark-text"></i>
+            </div>
+            <h5>Instant Invoice Generation</h5>
+            <p>Create professional GST-compliant invoices in seconds. Auto-fill prices, calculate taxes, and send with
+              one click.</p>
+          </div>
+        </div>
+        <!-- Feature 2 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="feature-card">
+            <div class="feature-icon" style="background:#f0fdf4;color:#16a34a">
+              <i class="bi bi-calculator"></i>
+            </div>
+            <h5>Auto GST Calculation</h5>
+            <p>Set GST rates per product category. SmartBill automatically adds the correct tax and breaks it down on
+              every invoice.</p>
+          </div>
+        </div>
+        <!-- Feature 3 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="feature-card">
+            <div class="feature-icon" style="background:#fff7ed;color:#d97706">
+              <i class="bi bi-people"></i>
+            </div>
+            <h5>Customer Management</h5>
+            <p>Keep a full customer database with purchase history, contact details, and outstanding balance tracking.
+            </p>
+          </div>
+        </div>
+        <!-- Feature 4 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="feature-card">
+            <div class="feature-icon" style="background:#fdf4ff;color:#9333ea">
+              <i class="bi bi-box-seam"></i>
+            </div>
+            <h5>Product Catalogue</h5>
+            <p>Manage your entire product inventory. Track stock levels, set prices, and get low-stock alerts
+              automatically.</p>
+          </div>
+        </div>
+        <!-- Feature 5 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="feature-card">
+            <div class="feature-icon" style="background:#fff1f2;color:#e11d48">
+              <i class="bi bi-bar-chart-line"></i>
+            </div>
+            <h5>Sales Analytics</h5>
+            <p>Visual reports of daily, weekly, and monthly revenue. See your top products and busiest customers at a
+              glance.</p>
+          </div>
+        </div>
+        <!-- Feature 6 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="feature-card">
+            <div class="feature-icon" style="background:#ecfdf5;color:#059669">
+              <i class="bi bi-file-earmark-pdf"></i>
+            </div>
+            <h5>PDF & Print</h5>
+            <p>Download any invoice as a PDF or print directly from the browser. Share via WhatsApp or email in one tap.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <div class="row g-4">
-      <!-- Feature 1 -->
-      <div class="col-md-6 col-lg-4">
-        <div class="feature-card">
-          <div class="feature-icon" style="background:#eff6ff;color:#2563eb">
-            <i class="bi bi-file-earmark-text"></i>
-          </div>
-          <h5>Instant Invoice Generation</h5>
-          <p>Create professional GST-compliant invoices in seconds. Auto-fill prices, calculate taxes, and send with one click.</p>
-        </div>
-      </div>
-      <!-- Feature 2 -->
-      <div class="col-md-6 col-lg-4">
-        <div class="feature-card">
-          <div class="feature-icon" style="background:#f0fdf4;color:#16a34a">
-            <i class="bi bi-calculator"></i>
-          </div>
-          <h5>Auto GST Calculation</h5>
-          <p>Set GST rates per product category. BillMate automatically adds the correct tax and breaks it down on every invoice.</p>
-        </div>
-      </div>
-      <!-- Feature 3 -->
-      <div class="col-md-6 col-lg-4">
-        <div class="feature-card">
-          <div class="feature-icon" style="background:#fff7ed;color:#d97706">
-            <i class="bi bi-people"></i>
-          </div>
-          <h5>Customer Management</h5>
-          <p>Keep a full customer database with purchase history, contact details, and outstanding balance tracking.</p>
-        </div>
-      </div>
-      <!-- Feature 4 -->
-      <div class="col-md-6 col-lg-4">
-        <div class="feature-card">
-          <div class="feature-icon" style="background:#fdf4ff;color:#9333ea">
-            <i class="bi bi-box-seam"></i>
-          </div>
-          <h5>Product Catalogue</h5>
-          <p>Manage your entire product inventory. Track stock levels, set prices, and get low-stock alerts automatically.</p>
-        </div>
-      </div>
-      <!-- Feature 5 -->
-      <div class="col-md-6 col-lg-4">
-        <div class="feature-card">
-          <div class="feature-icon" style="background:#fff1f2;color:#e11d48">
-            <i class="bi bi-bar-chart-line"></i>
-          </div>
-          <h5>Sales Analytics</h5>
-          <p>Visual reports of daily, weekly, and monthly revenue. See your top products and busiest customers at a glance.</p>
-        </div>
-      </div>
-      <!-- Feature 6 -->
-      <div class="col-md-6 col-lg-4">
-        <div class="feature-card">
-          <div class="feature-icon" style="background:#ecfdf5;color:#059669">
-            <i class="bi bi-file-earmark-pdf"></i>
-          </div>
-          <h5>PDF & Print</h5>
-          <p>Download any invoice as a PDF or print directly from the browser. Share via WhatsApp or email in one tap.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+  </section>
 
 
-<!-- ══════════════════════════════════════════
+  <!-- ══════════════════════════════════════════
      HOW IT WORKS
 ══════════════════════════════════════════ -->
-<section class="steps-section" id="how-it-works">
-  <div class="container">
-    <div class="text-center mb-5">
-      <div class="section-tag" style="color:#60a5fa">How it works</div>
-      <h2 class="section-title" style="color:#fff">Up and running in 3 steps</h2>
-      <p class="section-sub mx-auto" style="color:rgba(255,255,255,.5)">
-        No training required. No complicated setup. Just start billing.
-      </p>
-    </div>
+  <section class="steps-section" id="how-it-works">
+    <div class="container">
+      <div class="text-center mb-5">
+        <div class="section-tag" style="color:#60a5fa">How it works</div>
+        <h2 class="section-title" style="color:#fff">Up and running in 3 steps</h2>
+        <p class="section-sub mx-auto" style="color:rgba(255,255,255,.5)">
+          No training required. No complicated setup. Just start billing.
+        </p>
+      </div>
 
-    <div class="row g-4">
-      <div class="col-md-4">
-        <div class="step-card">
-          <div class="step-num">1</div>
-          <h5>Create Your Account</h5>
-          <p>Sign up in 30 seconds. Enter your shop name, GSTIN, and logo. Your account is ready to bill.</p>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="step-card">
+            <div class="step-num">1</div>
+            <h5>Create Your Account</h5>
+            <p>Sign up in 30 seconds. Enter your shop name, GSTIN, and logo. Your account is ready to bill.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="step-card">
+            <div class="step-num">2</div>
+            <h5>Add Products & Customers</h5>
+            <p>Import your product catalogue and customer list. Or add them one-by-one as you go — it's flexible.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="step-card">
+            <div class="step-num">3</div>
+            <h5>Generate & Share Bills</h5>
+            <p>Select customer, add items, hit Generate. Download PDF or print instantly. It really is that simple.</p>
+          </div>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="step-card">
-          <div class="step-num">2</div>
-          <h5>Add Products & Customers</h5>
-          <p>Import your product catalogue and customer list. Or add them one-by-one as you go — it's flexible.</p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="step-card">
-          <div class="step-num">3</div>
-          <h5>Generate & Share Bills</h5>
-          <p>Select customer, add items, hit Generate. Download PDF or print instantly. It really is that simple.</p>
-        </div>
+
+      <div class="text-center mt-5">
+        <a href="signup.html" class="btn-hero-primary">
+          <i class="bi bi-arrow-right-circle"></i> Start Free Today
+        </a>
       </div>
     </div>
-
-    <div class="text-center mt-5">
-      <a href="signup.html" class="btn-hero-primary">
-        <i class="bi bi-arrow-right-circle"></i> Start Free Today
-      </a>
-    </div>
-  </div>
-</section>
+  </section>
 
 
-<!-- ══════════════════════════════════════════
+  <!-- ══════════════════════════════════════════
      PRICING
 ══════════════════════════════════════════ -->
-<section class="section" id="pricing" style="background:#f8fafc">
-  <div class="container">
-    <div class="text-center mb-5">
-      <div class="section-tag">Pricing</div>
-      <h2 class="section-title">Simple, honest pricing</h2>
-      <p class="section-sub mx-auto">No hidden fees. Upgrade or cancel anytime.</p>
+  <section class="section" id="pricing" style="background:#f8fafc">
+    <div class="container">
+      <div class="text-center mb-5">
+        <div class="section-tag">Pricing</div>
+        <h2 class="section-title">Simple, honest pricing</h2>
+        <p class="section-sub mx-auto">No hidden fees. Upgrade or cancel anytime.</p>
+      </div>
+
+      <div class="row g-4 justify-content-center">
+        <!-- Free plan -->
+        <div class="col-md-4">
+          <div class="pricing-card">
+            <div class="plan-name">Starter</div>
+            <div class="price">0 ₹ <span class="period">/ month</span></div>
+            <div class="desc">Perfect for freelancers and very small shops.</div>
+            <ul class="price-features">
+              <li><i class="bi bi-check-circle-fill"></i> Up to 20 invoices/month</li>
+              <li><i class="bi bi-check-circle-fill"></i> 50 customers</li>
+              <li><i class="bi bi-check-circle-fill"></i> Basic GST invoices</li>
+              <li><i class="bi bi-check-circle-fill"></i> PDF download</li>
+              <li class="off"><i class="bi bi-x-circle-fill"></i> Sales analytics</li>
+              <li class="off"><i class="bi bi-x-circle-fill"></i> Priority support</li>
+            </ul>
+            <a href="signup.html" class="btn btn-outline-primary w-100" style="border-radius:9px;font-weight:700">Get
+              Started Free</a>
+          </div>
+        </div>
+        <!-- Pro plan (featured) -->
+        <div class="col-md-4">
+          <div class="pricing-card featured">
+            <div class="plan-name">Professional <span class="popular-badge">Most Popular</span></div>
+            <div class="price">499 ₹<span class="period">/ month</span></div>
+            <div class="desc">For growing shops that need full control.</div>
+            <ul class="price-features">
+              <li><i class="bi bi-check-circle-fill"></i> Unlimited invoices</li>
+              <li><i class="bi bi-check-circle-fill"></i> Unlimited customers</li>
+              <li><i class="bi bi-check-circle-fill"></i> Full product catalogue</li>
+              <li><i class="bi bi-check-circle-fill"></i> Sales analytics & reports</li>
+              <li><i class="bi bi-check-circle-fill"></i> Custom logo & branding</li>
+              <li><i class="bi bi-check-circle-fill"></i> Priority support</li>
+            </ul>
+            <a href="signup.html" class="btn btn-primary w-100" style="border-radius:9px;font-weight:700">Start 14-Day
+              Free Trial</a>
+          </div>
+        </div>
+        <!-- Business plan -->
+        <div class="col-md-4">
+          <div class="pricing-card">
+            <div class="plan-name">Business</div>
+            <div class="price">999 ₹ <span class="period">/ month</span></div>
+            <div class="desc">For multi-user teams and larger operations.</div>
+            <ul class="price-features">
+              <li><i class="bi bi-check-circle-fill"></i> Everything in Pro</li>
+              <li><i class="bi bi-check-circle-fill"></i> Up to 5 staff accounts</li>
+              <li><i class="bi bi-check-circle-fill"></i> Role-based access</li>
+              <li><i class="bi bi-check-circle-fill"></i> Advanced reports & export</li>
+              <li><i class="bi bi-check-circle-fill"></i> API access</li>
+              <li><i class="bi bi-check-circle-fill"></i> Dedicated support</li>
+            </ul>
+            <a href="signup.html" class="btn btn-outline-primary w-100" style="border-radius:9px;font-weight:700">Start
+              Free Trial</a>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <div class="row g-4 justify-content-center">
-      <!-- Free plan -->
-      <div class="col-md-4">
-        <div class="pricing-card">
-          <div class="plan-name">Starter</div>
-          <div class="price"><sup>₹</sup>0 <span class="period">/ month</span></div>
-          <div class="desc">Perfect for freelancers and very small shops.</div>
-          <ul class="price-features">
-            <li><i class="bi bi-check-circle-fill"></i> Up to 20 invoices/month</li>
-            <li><i class="bi bi-check-circle-fill"></i> 50 customers</li>
-            <li><i class="bi bi-check-circle-fill"></i> Basic GST invoices</li>
-            <li><i class="bi bi-check-circle-fill"></i> PDF download</li>
-            <li class="off"><i class="bi bi-x-circle-fill"></i> Sales analytics</li>
-            <li class="off"><i class="bi bi-x-circle-fill"></i> Priority support</li>
-          </ul>
-          <a href="signup.html" class="btn btn-outline-primary w-100" style="border-radius:9px;font-weight:700">Get Started Free</a>
-        </div>
-      </div>
-      <!-- Pro plan (featured) -->
-      <div class="col-md-4">
-        <div class="pricing-card featured">
-          <div class="plan-name">Professional <span class="popular-badge">Most Popular</span></div>
-          <div class="price"><sup>₹</sup>499 <span class="period">/ month</span></div>
-          <div class="desc">For growing shops that need full control.</div>
-          <ul class="price-features">
-            <li><i class="bi bi-check-circle-fill"></i> Unlimited invoices</li>
-            <li><i class="bi bi-check-circle-fill"></i> Unlimited customers</li>
-            <li><i class="bi bi-check-circle-fill"></i> Full product catalogue</li>
-            <li><i class="bi bi-check-circle-fill"></i> Sales analytics & reports</li>
-            <li><i class="bi bi-check-circle-fill"></i> Custom logo & branding</li>
-            <li><i class="bi bi-check-circle-fill"></i> Priority support</li>
-          </ul>
-          <a href="signup.html" class="btn btn-primary w-100" style="border-radius:9px;font-weight:700">Start 14-Day Free Trial</a>
-        </div>
-      </div>
-      <!-- Business plan -->
-      <div class="col-md-4">
-        <div class="pricing-card">
-          <div class="plan-name">Business</div>
-          <div class="price"><sup>₹</sup>999 <span class="period">/ month</span></div>
-          <div class="desc">For multi-user teams and larger operations.</div>
-          <ul class="price-features">
-            <li><i class="bi bi-check-circle-fill"></i> Everything in Pro</li>
-            <li><i class="bi bi-check-circle-fill"></i> Up to 5 staff accounts</li>
-            <li><i class="bi bi-check-circle-fill"></i> Role-based access</li>
-            <li><i class="bi bi-check-circle-fill"></i> Advanced reports & export</li>
-            <li><i class="bi bi-check-circle-fill"></i> API access</li>
-            <li><i class="bi bi-check-circle-fill"></i> Dedicated support</li>
-          </ul>
-          <a href="signup.html" class="btn btn-outline-primary w-100" style="border-radius:9px;font-weight:700">Start Free Trial</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+  </section>
 
 
-<!-- ══════════════════════════════════════════
+  <!-- ══════════════════════════════════════════
      TESTIMONIALS
 ══════════════════════════════════════════ -->
-<section class="testimonial-section">
-  <div class="container">
-    <div class="text-center mb-5">
-      <div class="section-tag">Testimonials</div>
-      <h2 class="section-title">What our users say</h2>
+  <section class="testimonial-section">
+    <div class="container">
+      <div class="text-center mb-5">
+        <div class="section-tag">Testimonials</div>
+        <h2 class="section-title">What our users say</h2>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-text">"Switched from manual Excel billing to SmartBill. It saves me at least 2 hours every
+              day. The GST calculation is perfect."</p>
+            <div class="testi-author">
+              <div class="testi-avatar" style="background:#2563eb">RS</div>
+              <div>
+                <div class="testi-name">Ravi Shankar</div>
+                <div class="testi-role">Electronics shop owner, Mumbai</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-text">"My accountant loves it. Clean invoices, correct GST, and I can export everything at
+              tax time. Best ₹499 I spend every month."</p>
+            <div class="testi-author">
+              <div class="testi-avatar" style="background:#16a34a">PD</div>
+              <div>
+                <div class="testi-name">Preethi Devi</div>
+                <div class="testi-role">Clothing boutique, Bengaluru</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="testi-card">
+            <div class="testi-stars">★★★★☆</div>
+            <p class="testi-text">"Simple enough that even my staff figured it out without training. Reports help me
+              know which products to stock more of."</p>
+            <div class="testi-author">
+              <div class="testi-avatar" style="background:#d97706">AK</div>
+              <div>
+                <div class="testi-name">Arjun Kumar</div>
+                <div class="testi-role">Grocery distributor, Pune</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="row g-4">
-      <div class="col-md-4">
-        <div class="testi-card">
-          <div class="testi-stars">★★★★★</div>
-          <p class="testi-text">"Switched from manual Excel billing to BillMate. It saves me at least 2 hours every day. The GST calculation is perfect."</p>
-          <div class="testi-author">
-            <div class="testi-avatar" style="background:#2563eb">RS</div>
-            <div>
-              <div class="testi-name">Ravi Shankar</div>
-              <div class="testi-role">Electronics shop owner, Mumbai</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="testi-card">
-          <div class="testi-stars">★★★★★</div>
-          <p class="testi-text">"My accountant loves it. Clean invoices, correct GST, and I can export everything at tax time. Best ₹499 I spend every month."</p>
-          <div class="testi-author">
-            <div class="testi-avatar" style="background:#16a34a">PD</div>
-            <div>
-              <div class="testi-name">Preethi Devi</div>
-              <div class="testi-role">Clothing boutique, Bengaluru</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="testi-card">
-          <div class="testi-stars">★★★★☆</div>
-          <p class="testi-text">"Simple enough that even my staff figured it out without training. Reports help me know which products to stock more of."</p>
-          <div class="testi-author">
-            <div class="testi-avatar" style="background:#d97706">AK</div>
-            <div>
-              <div class="testi-name">Arjun Kumar</div>
-              <div class="testi-role">Grocery distributor, Pune</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+  </section>
 
 
-<!-- ══════════════════════════════════════════
+  <!-- ══════════════════════════════════════════
      CTA BANNER
 ══════════════════════════════════════════ -->
-<section class="cta-section">
-  <div class="container">
-    <h2>Ready to simplify your billing?</h2>
-    <p>Join 2,400+ businesses. Free to start. No credit card required.</p>
-    <a href="signup.html" class="btn-cta-white">
-      <i class="bi bi-rocket-takeoff"></i> Create Free Account
-    </a>
-  </div>
-</section>
+  <section class="cta-section">
+    <div class="container">
+      <h2>Ready to simplify your billing?</h2>
+      <p>Join 2,400+ businesses. Free to start. No credit card required.</p>
+      <a href="signup.html" class="btn-cta-white">
+        <i class="bi bi-rocket-takeoff"></i> Create Free Account
+      </a>
+    </div>
+  </section>
 
 
-<!-- ══════════════════════════════════════════
+  <!-- ══════════════════════════════════════════
      FOOTER
 ══════════════════════════════════════════ -->
-<footer class="footer">
-  <div class="container">
-    <div class="row g-4">
-      <div class="col-lg-4">
-        <div class="footer-brand">
-          <span class="brand-icon-sm"><i class="bi bi-receipt-cutoff"></i></span>
-          BillMate
+  <footer class="footer">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <div class="footer-brand">
+            <span class="brand-icon-sm"><i class="bi bi-receipt-cutoff"></i></span>
+            SmartBill
+          </div>
+          <div class="footer-tagline">Smart billing for growing businesses.</div>
+          <div class="mt-3 d-flex gap-3">
+            <a href="#" style="color:rgba(255,255,255,.4);font-size:1.1rem;transition:color .15s"
+              onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.4)'"><i
+                class="bi bi-twitter-x"></i></a>
+            <a href="#" style="color:rgba(255,255,255,.4);font-size:1.1rem;transition:color .15s"
+              onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.4)'"><i
+                class="bi bi-linkedin"></i></a>
+            <a href="#" style="color:rgba(255,255,255,.4);font-size:1.1rem;transition:color .15s"
+              onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.4)'"><i
+                class="bi bi-instagram"></i></a>
+          </div>
         </div>
-        <div class="footer-tagline">Smart billing for growing businesses.</div>
-        <div class="mt-3 d-flex gap-3">
-          <a href="#" style="color:rgba(255,255,255,.4);font-size:1.1rem;transition:color .15s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.4)'"><i class="bi bi-twitter-x"></i></a>
-          <a href="#" style="color:rgba(255,255,255,.4);font-size:1.1rem;transition:color .15s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.4)'"><i class="bi bi-linkedin"></i></a>
-          <a href="#" style="color:rgba(255,255,255,.4);font-size:1.1rem;transition:color .15s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.4)'"><i class="bi bi-instagram"></i></a>
+        <div class="col-6 col-lg-2">
+          <div class="footer-heading">Product</div>
+          <ul class="footer-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="login.html">Login</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-lg-2">
+          <div class="footer-heading">App</div>
+          <ul class="footer-links">
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="billing.html">New Bill</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="reports.html">Reports</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-lg-2">
+          <div class="footer-heading">Legal</div>
+          <ul class="footer-links">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Cookie Policy</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-lg-2">
+          <div class="footer-heading">Support</div>
+          <ul class="footer-links">
+            <li><a href="#">Help Centre</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">WhatsApp</a></li>
+          </ul>
         </div>
       </div>
-      <div class="col-6 col-lg-2">
-        <div class="footer-heading">Product</div>
-        <ul class="footer-links">
-          <li><a href="#features">Features</a></li>
-          <li><a href="#pricing">Pricing</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="login.html">Login</a></li>
-        </ul>
-      </div>
-      <div class="col-6 col-lg-2">
-        <div class="footer-heading">App</div>
-        <ul class="footer-links">
-          <li><a href="dashboard.html">Dashboard</a></li>
-          <li><a href="billing.html">New Bill</a></li>
-          <li><a href="products.html">Products</a></li>
-          <li><a href="reports.html">Reports</a></li>
-        </ul>
-      </div>
-      <div class="col-6 col-lg-2">
-        <div class="footer-heading">Legal</div>
-        <ul class="footer-links">
-          <li><a href="#">Privacy Policy</a></li>
-          <li><a href="#">Terms of Service</a></li>
-          <li><a href="#">Cookie Policy</a></li>
-        </ul>
-      </div>
-      <div class="col-6 col-lg-2">
-        <div class="footer-heading">Support</div>
-        <ul class="footer-links">
-          <li><a href="#">Help Centre</a></li>
-          <li><a href="#">Contact Us</a></li>
-          <li><a href="#">WhatsApp</a></li>
-        </ul>
+      <div class="footer-bottom">
+        <span>© 2025 SmartBill. All rights reserved.</span>
+        <span>Made with ❤️ for Indian businesses</span>
       </div>
     </div>
-    <div class="footer-bottom">
-      <span>© 2025 BillMate. All rights reserved.</span>
-      <span>Made with ❤️ for Indian businesses</span>
-    </div>
-  </div>
-</footer>
+  </footer>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

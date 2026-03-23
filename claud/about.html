@@ -1,670 +1,395 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>About – BillMate</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-  <style>
-    :root {
-      --brand: #2563eb; --brand-dark: #1d4ed8;
-      --navy:  #0f172a; --navy-light: #1e293b;
-      --body-bg: #f8fafc; --border: #e2e8f0;
-      --text: #1e293b; --muted: #64748b;
-      --font: 'Plus Jakarta Sans', sans-serif;
-    }
-    *, *::before, *::after { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body { font-family: var(--font); background: var(--body-bg); color: var(--text); margin: 0; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About – SmartBill</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
 
-    /* ── Navbar (same as home) ── */
-    .navbar {
-      background: rgba(15,23,42,.97); backdrop-filter: blur(12px);
-      padding: .9rem 0; position: sticky; top: 0; z-index: 1000;
-      border-bottom: 1px solid rgba(255,255,255,.06);
-    }
-    .navbar-brand {
-      font-weight: 800; font-size: 1.2rem; color: #fff !important;
-      display: flex; align-items: center; gap: .5rem;
-    }
-    .brand-icon-sm {
-      width: 30px; height: 30px; background: var(--brand);
-      border-radius: 7px; display: flex; align-items: center;
-      justify-content: center; font-size: .9rem;
-    }
-    .navbar-nav .nav-link { color: rgba(255,255,255,.65) !important; font-weight: 500; font-size: .875rem; padding: .4rem .85rem !important; transition: color .15s; }
-    .navbar-nav .nav-link:hover, .navbar-nav .nav-link.active { color: #fff !important; }
-    .navbar-toggler { border-color: rgba(255,255,255,.2); }
-    .navbar-toggler-icon { filter: invert(1); }
+    rel="stylesheet" />
+    <link rel="stylesheet" href="style.css">
 
-    /* ── Section helpers ── */
-    .section { padding: 5rem 0; }
-    .section-tag { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brand); margin-bottom: .6rem; }
-    .section-title { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 800; line-height: 1.2; margin-bottom: 1rem; }
-    .section-sub { color: var(--muted); font-size: .95rem; line-height: 1.7; }
-
-    /* ════════════════════════════════
-       HERO / PAGE HEADER
-    ════════════════════════════════ */
-    .page-hero {
-      background: var(--navy);
-      padding: 5rem 0 4rem;
-      position: relative;
-      overflow: hidden;
-      text-align: center;
-    }
-    .page-hero::before {
-      content: '';
-      position: absolute; inset: 0;
-      background-image:
-        linear-gradient(rgba(37,99,235,.07) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(37,99,235,.07) 1px, transparent 1px);
-      background-size: 48px 48px;
-    }
-    .page-hero::after {
-      content: '';
-      position: absolute;
-      top: -80px; left: 50%; transform: translateX(-50%);
-      width: 500px; height: 300px;
-      background: radial-gradient(ellipse, rgba(37,99,235,.2) 0%, transparent 70%);
-    }
-    .page-hero .content { position: relative; z-index: 1; }
-    .page-hero .eyebrow {
-      font-size: .78rem; font-weight: 700; letter-spacing: .1em;
-      text-transform: uppercase; color: #60a5fa; margin-bottom: 1rem;
-    }
-    .page-hero h1 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; color: #fff; margin-bottom: 1rem; }
-    .page-hero p  { color: rgba(255,255,255,.6); font-size: 1rem; max-width: 560px; margin: 0 auto; line-height: 1.7; }
-
-    /* ════════════════════════════════
-       MISSION SECTION
-    ════════════════════════════════ */
-    .mission-section { background: #fff; padding: 5rem 0; }
-    .mission-section .lead {
-      font-size: 1.15rem;
-      font-weight: 600;
-      line-height: 1.75;
-      color: var(--text);
-    }
-    .mission-section p { color: var(--muted); font-size: .95rem; line-height: 1.8; }
-
-    /* Blue quote bar */
-    .quote-bar {
-      border-left: 4px solid var(--brand);
-      padding: 1rem 1.5rem;
-      background: #eff6ff;
-      border-radius: 0 10px 10px 0;
-      margin: 1.5rem 0;
-      font-size: .95rem;
-      font-style: italic;
-      color: var(--navy-light);
-      font-weight: 500;
-    }
-
-    /* ════════════════════════════════
-       VALUES CARDS
-    ════════════════════════════════ */
-    .value-card {
-      background: var(--body-bg);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.5rem;
-      height: 100%;
-      border-top: 3px solid var(--brand);
-      transition: transform .2s, box-shadow .2s;
-    }
-    .value-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(37,99,235,.1); }
-    .value-icon { font-size: 1.5rem; margin-bottom: .75rem; }
-    .value-card h5 { font-size: .95rem; font-weight: 700; margin-bottom: .4rem; }
-    .value-card p  { font-size: .85rem; color: var(--muted); line-height: 1.65; margin: 0; }
-
-    /* ════════════════════════════════
-       TEAM SECTION
-    ════════════════════════════════ */
-    .team-section { background: var(--navy); padding: 5rem 0; }
-    .team-card {
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 14px;
-      padding: 1.75rem;
-      text-align: center;
-      height: 100%;
-      transition: background .2s;
-    }
-    .team-card:hover { background: rgba(255,255,255,.07); }
-    .team-avatar {
-      width: 72px; height: 72px;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.5rem; font-weight: 800; color: #fff;
-      margin: 0 auto 1rem;
-      border: 3px solid rgba(255,255,255,.1);
-    }
-    .team-card .name  { color: #fff; font-weight: 700; font-size: .95rem; margin-bottom: .2rem; }
-    .team-card .role  { color: rgba(255,255,255,.5); font-size: .8rem; margin-bottom: .75rem; }
-    .team-card .bio   { color: rgba(255,255,255,.4); font-size: .82rem; line-height: 1.6; margin-bottom: 1rem; }
-    .team-card .socials a {
-      color: rgba(255,255,255,.35); font-size: 1rem; margin: 0 .25rem;
-      text-decoration: none; transition: color .15s;
-    }
-    .team-card .socials a:hover { color: #fff; }
-
-    /* ════════════════════════════════
-       MILESTONES / TIMELINE
-    ════════════════════════════════ */
-    .timeline-section { background: #fff; padding: 5rem 0; }
-    .timeline { position: relative; padding-left: 2rem; }
-    .timeline::before {
-      content: '';
-      position: absolute; left: 7px; top: 0; bottom: 0;
-      width: 2px; background: var(--border);
-    }
-    .timeline-item { position: relative; margin-bottom: 2.5rem; }
-    .timeline-item:last-child { margin-bottom: 0; }
-    .timeline-dot {
-      position: absolute;
-      left: -1.75rem;
-      top: .2rem;
-      width: 16px; height: 16px;
-      border-radius: 50%;
-      background: var(--brand);
-      border: 3px solid #fff;
-      box-shadow: 0 0 0 2px var(--brand);
-    }
-    .timeline-year { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--brand); margin-bottom: .25rem; }
-    .timeline-title { font-weight: 700; font-size: .95rem; margin-bottom: .3rem; }
-    .timeline-desc  { color: var(--muted); font-size: .875rem; line-height: 1.6; margin: 0; }
-
-    /* ════════════════════════════════
-       STATS ROW
-    ════════════════════════════════ */
-    .stats-section { background: var(--brand); padding: 4rem 0; }
-    .stat-block { text-align: center; }
-    .stat-block .num  { font-size: 2.2rem; font-weight: 800; color: #fff; line-height: 1; }
-    .stat-block .desc { color: rgba(255,255,255,.7); font-size: .85rem; margin-top: .25rem; }
-
-    /* ════════════════════════════════
-       CONTACT / CTA
-    ════════════════════════════════ */
-    .contact-section { padding: 5rem 0; background: var(--body-bg); }
-    .contact-card {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 2rem;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-    }
-    .contact-icon {
-      width: 48px; height: 48px;
-      border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.3rem;
-      margin-bottom: 1rem;
-    }
-    .contact-card h5 { font-weight: 700; font-size: .95rem; margin-bottom: .4rem; }
-    .contact-card p  { color: var(--muted); font-size: .875rem; line-height: 1.65; flex: 1; }
-    .contact-card a.contact-link {
-      color: var(--brand); font-weight: 600; font-size: .875rem;
-      text-decoration: none; display: flex; align-items: center; gap: .3rem;
-    }
-    .contact-card a.contact-link:hover { text-decoration: underline; }
-
-    /* ════════════════════════════════
-       FOOTER
-    ════════════════════════════════ */
-    .footer { background: var(--navy); color: rgba(255,255,255,.5); padding: 3rem 0 2rem; }
-    .footer-brand { color: #fff; font-weight: 800; font-size: 1.1rem; display: flex; align-items: center; gap: .5rem; }
-    .footer-tagline { font-size: .82rem; margin-top: .4rem; color: rgba(255,255,255,.4); }
-    .footer-heading { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: rgba(255,255,255,.6); margin-bottom: .75rem; }
-    .footer-links { list-style: none; padding: 0; margin: 0; }
-    .footer-links li { margin-bottom: .4rem; }
-    .footer-links a { color: rgba(255,255,255,.45); text-decoration: none; font-size: .85rem; transition: color .15s; }
-    .footer-links a:hover { color: #fff; }
-    .footer-bottom { border-top: 1px solid rgba(255,255,255,.08); margin-top: 2.5rem; padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .5rem; font-size: .8rem; }
-  </style>
 </head>
+
 <body>
 
-<!-- ════════════════════════════════
+  <!-- ════════════════════════════════
      NAVBAR
 ════════════════════════════════ -->
-<nav class="navbar navbar-expand-lg">
-  <div class="container">
-    <a class="navbar-brand" href="index.html">
-      <span class="brand-icon-sm"><i class="bi bi-receipt-cutoff"></i></span>BillMate
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navMenu">
-      <ul class="navbar-nav mx-auto">
-        <li class="nav-item"><a class="nav-link" href="index.html#features">Features</a></li>
-        <li class="nav-item"><a class="nav-link" href="index.html#pricing">Pricing</a></li>
-        <li class="nav-item"><a class="nav-link active" href="about.html">About</a></li>
-      </ul>
-      <div class="d-flex gap-2 mt-2 mt-lg-0">
-        <a href="login.html"  class="btn btn-sm btn-outline-light" style="border-radius:8px;font-weight:600">Login</a>
-        <a href="signup.html" class="btn btn-sm btn-primary"       style="border-radius:8px;font-weight:700">Get Started Free</a>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <span class="brand-icon-sm"><i class="bi bi-receipt-cutoff"></i></span>SmartBill
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html#features">Features</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html#pricing">Pricing</a></li>
+          <li class="nav-item"><a class="nav-link active" href="about.html">About</a></li>
+        </ul>
+        <div class="d-flex gap-2 mt-2 mt-lg-0">
+          <a href="login.html" class="btn btn-sm btn-outline-light" style="border-radius:8px;font-weight:600">Login</a>
+          <a href="signup.html" class="btn btn-sm btn-primary" style="border-radius:8px;font-weight:700">Get Started
+            Free</a>
+        </div>
       </div>
     </div>
-  </div>
-</nav>
+  </nav>
 
 
-<!-- ════════════════════════════════
+  <!-- ════════════════════════════════
      PAGE HERO
 ════════════════════════════════ -->
-<section class="page-hero">
-  <div class="container">
-    <div class="content">
-      <div class="eyebrow">Our Story</div>
-      <h1>Built by small business owners,<br/>for small business owners</h1>
-      <p>
-        BillMate started with a simple frustration: billing software was
-        either too expensive, too complicated, or made for big enterprises.
-        So we built something better.
-      </p>
+  <section class="page-hero">
+    <div class="container">
+      <div class="content">
+        <div class="eyebrow">Our Story</div>
+        <h1>Built by small business owners,<br />for small business owners</h1>
+        <p>
+          SmartBill started with a simple frustration: billing software was
+          either too expensive, too complicated, or made for big enterprises.
+          So we built something better.
+        </p>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
 
-<!-- ════════════════════════════════
+  <!-- ════════════════════════════════
      MISSION
 ════════════════════════════════ -->
-<section class="mission-section">
-  <div class="container">
-    <div class="row g-5 align-items-center">
-      <div class="col-lg-6">
-        <div class="section-tag">Our Mission</div>
-        <h2 class="section-title">Empowering every business, no matter the size</h2>
-        <p class="lead">
-          We believe every shop owner, freelancer, and trader deserves
-          professional tools — without needing a CA or an IT team.
-        </p>
-        <div class="quote-bar">
-          "A kirana store owner in Nagpur should have the same billing power
-          as a corporate in Mumbai. That's what we're building."
+  <section class="mission-section">
+    <div class="container">
+      <div class="row g-5 align-items-center">
+        <div class="col-lg-6">
+          <div class="section-tag">Our Mission</div>
+          <h2 class="section-title">Empowering every business, no matter the size</h2>
+          <p class="lead">
+            We believe every shop owner, freelancer, and trader deserves
+            professional tools — without needing a CA or an IT team.
+          </p>
+          <div class="quote-bar">
+            "A kirana store owner in Nagpur should have the same billing power
+            as a corporate in Mumbai. That's what we're building."
+          </div>
+          <p>
+            SmartBill was founded in 2023 by a team who spent years watching
+            small business owners struggle with handwritten bills, missed payments,
+            and stressful tax seasons. We set out to change that with software
+            that's genuinely simple, genuinely affordable, and genuinely useful.
+          </p>
+          <p>
+            Today, over 2,400 businesses across India use SmartBill to generate
+            professional invoices, track GST, manage customers, and grow with confidence.
+          </p>
         </div>
-        <p>
-          BillMate was founded in 2023 by a team who spent years watching
-          small business owners struggle with handwritten bills, missed payments,
-          and stressful tax seasons. We set out to change that with software
-          that's genuinely simple, genuinely affordable, and genuinely useful.
-        </p>
-        <p>
-          Today, over 2,400 businesses across India use BillMate to generate
-          professional invoices, track GST, manage customers, and grow with confidence.
-        </p>
-      </div>
-      <div class="col-lg-6">
-        <!-- Values grid -->
-        <div class="row g-3">
-          <div class="col-6">
-            <div class="value-card">
-              <div class="value-icon">🎯</div>
-              <h5>Simplicity First</h5>
-              <p>If it takes more than 3 clicks, we redesign it. Complexity is the enemy of adoption.</p>
+        <div class="col-lg-6">
+          <!-- Values grid -->
+          <div class="row g-3">
+            <div class="col-6">
+              <div class="value-card">
+                <div class="value-icon">🎯</div>
+                <h5>Simplicity First</h5>
+                <p>If it takes more than 3 clicks, we redesign it. Complexity is the enemy of adoption.</p>
+              </div>
             </div>
-          </div>
-          <div class="col-6">
-            <div class="value-card">
-              <div class="value-icon">🔒</div>
-              <h5>Privacy by Design</h5>
-              <p>Your business data is yours. We encrypt everything and never sell your information.</p>
+            <div class="col-6">
+              <div class="value-card">
+                <div class="value-icon">🔒</div>
+                <h5>Privacy by Design</h5>
+                <p>Your business data is yours. We encrypt everything and never sell your information.</p>
+              </div>
             </div>
-          </div>
-          <div class="col-6">
-            <div class="value-card">
-              <div class="value-icon">💡</div>
-              <h5>Always Improving</h5>
-              <p>We ship updates every week, guided entirely by what our users ask for.</p>
+            <div class="col-6">
+              <div class="value-card">
+                <div class="value-icon">💡</div>
+                <h5>Always Improving</h5>
+                <p>We ship updates every week, guided entirely by what our users ask for.</p>
+              </div>
             </div>
-          </div>
-          <div class="col-6">
-            <div class="value-card">
-              <div class="value-icon">🤝</div>
-              <h5>Honest Pricing</h5>
-              <p>No surprise charges. No dark patterns. What you see is what you pay.</p>
+            <div class="col-6">
+              <div class="value-card">
+                <div class="value-icon">🤝</div>
+                <h5>Honest Pricing</h5>
+                <p>No surprise charges. No dark patterns. What you see is what you pay.</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
 
-<!-- ════════════════════════════════
+  <!-- ════════════════════════════════
      STATS
 ════════════════════════════════ -->
-<section class="stats-section">
-  <div class="container">
-    <div class="row g-4">
-      <div class="col-6 col-md-3">
-        <div class="stat-block">
-          <div class="num">2,400+</div>
-          <div class="desc">Businesses onboarded</div>
-        </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="stat-block">
-          <div class="num">₹ 50Cr+</div>
-          <div class="desc">Invoices processed</div>
-        </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="stat-block">
-          <div class="num">18+</div>
-          <div class="desc">States across India</div>
-        </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="stat-block">
-          <div class="num">4.9 ★</div>
-          <div class="desc">Average user rating</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ════════════════════════════════
-     TEAM
-════════════════════════════════ -->
-<section class="team-section">
-  <div class="container">
-    <div class="text-center mb-5">
-      <div class="section-tag" style="color:#60a5fa">The Team</div>
-      <h2 class="section-title" style="color:#fff">Small team, big mission</h2>
-      <p class="section-sub mx-auto" style="color:rgba(255,255,255,.5);max-width:460px">
-        We're a lean team of designers, engineers, and business owners
-        who've all felt the pain of bad billing software.
-      </p>
-    </div>
-
-    <div class="row g-4 justify-content-center">
-      <div class="col-md-4 col-lg-3">
-        <div class="team-card">
-          <div class="team-avatar" style="background:#2563eb">AK</div>
-          <div class="name">Arjun Kapoor</div>
-          <div class="role">Co-founder & CEO</div>
-          <div class="bio">Former retail shop owner turned SaaS builder. Built BillMate after 7 years of billing nightmares.</div>
-          <div class="socials">
-            <a href="#"><i class="bi bi-linkedin"></i></a>
-            <a href="#"><i class="bi bi-twitter-x"></i></a>
+  <section class="stats-section">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-6 col-md-3">
+          <div class="stat-block">
+            <div class="num">2,400+</div>
+            <div class="desc">Businesses onboarded</div>
           </div>
         </div>
-      </div>
-      <div class="col-md-4 col-lg-3">
-        <div class="team-card">
-          <div class="team-avatar" style="background:#16a34a">SM</div>
-          <div class="name">Sneha Menon</div>
-          <div class="role">Co-founder & CTO</div>
-          <div class="bio">Full-stack engineer with a passion for making complex things dead simple. Django & React specialist.</div>
-          <div class="socials">
-            <a href="#"><i class="bi bi-linkedin"></i></a>
-            <a href="#"><i class="bi bi-github"></i></a>
+        <div class="col-6 col-md-3">
+          <div class="stat-block">
+            <div class="num">₹ 50Cr+</div>
+            <div class="desc">Invoices processed</div>
           </div>
         </div>
-      </div>
-      <div class="col-md-4 col-lg-3">
-        <div class="team-card">
-          <div class="team-avatar" style="background:#d97706">RV</div>
-          <div class="name">Rohan Verma</div>
-          <div class="role">Head of Design</div>
-          <div class="bio">Obsessed with the idea that business software doesn't have to be ugly. Every pixel intentional.</div>
-          <div class="socials">
-            <a href="#"><i class="bi bi-linkedin"></i></a>
-            <a href="#"><i class="bi bi-dribbble"></i></a>
+        <div class="col-6 col-md-3">
+          <div class="stat-block">
+            <div class="num">18+</div>
+            <div class="desc">States across India</div>
           </div>
         </div>
-      </div>
-      <div class="col-md-4 col-lg-3">
-        <div class="team-card">
-          <div class="team-avatar" style="background:#9333ea">PA</div>
-          <div class="name">Pooja Agrawal</div>
-          <div class="role">Customer Success</div>
-          <div class="bio">Talks to 50+ users every week. Makes sure their feedback becomes features, not just tickets.</div>
-          <div class="socials">
-            <a href="#"><i class="bi bi-linkedin"></i></a>
-            <a href="#"><i class="bi bi-twitter-x"></i></a>
+        <div class="col-6 col-md-3">
+          <div class="stat-block">
+            <div class="num">4.9 ★</div>
+            <div class="desc">Average user rating</div>
           </div>
         </div>
       </div>
     </div>
-
-    <div class="text-center mt-5">
-      <a href="signup.html" class="btn btn-primary" style="border-radius:10px;font-weight:700;padding:.7rem 2rem">
-        <i class="bi bi-rocket-takeoff me-2"></i>Join our journey — it's free
-      </a>
-    </div>
-  </div>
-</section>
+  </section>
 
 
-<!-- ════════════════════════════════
+
+
+
+  <!-- ════════════════════════════════
      TIMELINE / MILESTONES
 ════════════════════════════════ -->
-<section class="timeline-section">
-  <div class="container">
-    <div class="row g-5 align-items-start">
-      <div class="col-lg-4">
-        <div class="section-tag">Our Journey</div>
-        <h2 class="section-title">Milestones that shaped us</h2>
-        <p class="section-sub">
-          From a weekend side project to thousands of businesses across India —
-          here's how BillMate grew.
-        </p>
-      </div>
-      <div class="col-lg-8">
-        <div class="timeline">
+  <section class="timeline-section">
+    <div class="container">
+      <div class="row g-5 align-items-start">
+        <div class="col-lg-4">
+          <div class="section-tag">Our Journey</div>
+          <h2 class="section-title">Milestones that shaped us</h2>
+          <p class="section-sub">
+            From a weekend side project to thousands of businesses across India —
+            here's how SmartBill grew.
+          </p>
+        </div>
+        <div class="col-lg-8">
+          <div class="timeline">
 
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-year">January 2023</div>
-            <div class="timeline-title">The idea is born</div>
-            <p class="timeline-desc">Arjun, frustrated by a ₹12,000/year billing tool, writes the first 200 lines of BillMate on a Saturday afternoon.</p>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-year">January 2023</div>
+              <div class="timeline-title">The idea is born</div>
+              <p class="timeline-desc">Arjun, frustrated by a ₹12,000/year billing tool, writes the first 200 lines of
+                SmartBill on a Saturday afternoon.</p>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-year">April 2023</div>
+              <div class="timeline-title">First 10 users</div>
+              <p class="timeline-desc">We share a WhatsApp link with shop owners in our neighbourhood. 10 of them start
+                using it. Real feedback begins.</p>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-year">August 2023</div>
+              <div class="timeline-title">GST automation launched</div>
+              <p class="timeline-desc">The most-requested feature lands. Auto-GST calculation across all product
+                categories. Users love it.</p>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-year">January 2024</div>
+              <div class="timeline-title">500 businesses milestone</div>
+              <p class="timeline-desc">Word of mouth takes over. 500 shops across Maharashtra, Karnataka, and Gujarat
+                are now on SmartBill.</p>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-year">July 2025</div>
+              <div class="timeline-title">2,400+ businesses. Growing daily.</div>
+              <p class="timeline-desc">Team grows to 8. New features: analytics dashboard, PDF downloads, multi-user
+                support. The journey continues.</p>
+            </div>
+
           </div>
-
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-year">April 2023</div>
-            <div class="timeline-title">First 10 users</div>
-            <p class="timeline-desc">We share a WhatsApp link with shop owners in our neighbourhood. 10 of them start using it. Real feedback begins.</p>
-          </div>
-
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-year">August 2023</div>
-            <div class="timeline-title">GST automation launched</div>
-            <p class="timeline-desc">The most-requested feature lands. Auto-GST calculation across all product categories. Users love it.</p>
-          </div>
-
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-year">January 2024</div>
-            <div class="timeline-title">500 businesses milestone</div>
-            <p class="timeline-desc">Word of mouth takes over. 500 shops across Maharashtra, Karnataka, and Gujarat are now on BillMate.</p>
-          </div>
-
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-year">July 2025</div>
-            <div class="timeline-title">2,400+ businesses. Growing daily.</div>
-            <p class="timeline-desc">Team grows to 8. New features: analytics dashboard, PDF downloads, multi-user support. The journey continues.</p>
-          </div>
-
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
 
-<!-- ════════════════════════════════
+  <!-- ════════════════════════════════
      CONTACT / GET IN TOUCH
 ════════════════════════════════ -->
-<section class="contact-section">
-  <div class="container">
-    <div class="text-center mb-5">
-      <div class="section-tag">Get in Touch</div>
-      <h2 class="section-title">We'd love to hear from you</h2>
-      <p class="section-sub mx-auto" style="max-width:440px">
-        Questions, feedback, or just want to say hi?
-        We reply to every message — usually within a few hours.
-      </p>
+  <section class="contact-section">
+    <div class="container">
+      <div class="text-center mb-5">
+        <div class="section-tag">Get in Touch</div>
+        <h2 class="section-title">We'd love to hear from you</h2>
+        <p class="section-sub mx-auto" style="max-width:440px">
+          Questions, feedback, or just want to say hi?
+          We reply to every message — usually within a few hours.
+        </p>
+      </div>
+
+      <div class="row g-4 justify-content-center">
+        <div class="col-md-4">
+          <div class="contact-card">
+            <div class="contact-icon" style="background:#eff6ff;color:#2563eb">
+              <i class="bi bi-envelope"></i>
+            </div>
+            <h5>Email Us</h5>
+            <p>For product questions, billing issues, or feature requests. We aim to respond within 4 hours.</p>
+            <a href="mailto:hello@SmartBill.in" class="contact-link">
+              hello@SmartBill.in <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="contact-card">
+            <div class="contact-icon" style="background:#f0fdf4;color:#16a34a">
+              <i class="bi bi-whatsapp"></i>
+            </div>
+            <h5>WhatsApp Support</h5>
+            <p>Fastest way to get help. Available Monday–Saturday, 9 AM to 7 PM IST for all users.</p>
+            <a href="https://wa.me/919876543210" class="contact-link" target="_blank">
+              +91 9265186613 <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="contact-card">
+            <div class="contact-icon" style="background:#fff7ed;color:#d97706">
+              <i class="bi bi-geo-alt"></i>
+            </div>
+            <h5>Office</h5>
+            <p>Come say hello. We're happy to give you a walkthrough of SmartBill in person.</p>
+            <a href="#" class="contact-link">
+              Gandhingar, Gujarat, India <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feedback form -->
+      <div class="row justify-content-center mt-5">
+        <div class="col-lg-7">
+          <div class="p-4 bg-white border rounded-4 shadow-sm">
+            <h5 class="fw-bold mb-1">Send us a message</h5>
+            <p class="text-muted small mb-4">We read every message and respond personally.</p>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label small fw-semibold text-muted">Your Name</label>
+                <input type="text" class="form-control" placeholder="Rahul Sharma" />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-semibold text-muted">Email Address</label>
+                <input type="email" class="form-control" placeholder="rahul@example.com" />
+              </div>
+              <div class="col-12">
+                <label class="form-label small fw-semibold text-muted">Subject</label>
+                <select class="form-select">
+                  <option>General question</option>
+                  <option>Feature request</option>
+                  <option>Bug report</option>
+                  <option>Pricing / billing</option>
+                  <option>Partnership</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label small fw-semibold text-muted">Message</label>
+                <textarea class="form-control" rows="4" placeholder="Tell us what's on your mind…"></textarea>
+              </div>
+              <div class="col-12">
+                <button class="btn btn-primary px-4" style="border-radius:9px;font-weight:700"
+                  onclick="this.innerHTML='<i class=\'bi bi-check-lg me-1\'></i> Sent!';this.disabled=true;this.classList.replace('btn-primary','btn-success')">
+                  <i class="bi bi-send me-1"></i> Send Message
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
-
-    <div class="row g-4 justify-content-center">
-      <div class="col-md-4">
-        <div class="contact-card">
-          <div class="contact-icon" style="background:#eff6ff;color:#2563eb">
-            <i class="bi bi-envelope"></i>
-          </div>
-          <h5>Email Us</h5>
-          <p>For product questions, billing issues, or feature requests. We aim to respond within 4 hours.</p>
-          <a href="mailto:hello@billmate.in" class="contact-link">
-            hello@billmate.in <i class="bi bi-arrow-right"></i>
-          </a>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="contact-card">
-          <div class="contact-icon" style="background:#f0fdf4;color:#16a34a">
-            <i class="bi bi-whatsapp"></i>
-          </div>
-          <h5>WhatsApp Support</h5>
-          <p>Fastest way to get help. Available Monday–Saturday, 9 AM to 7 PM IST for all users.</p>
-          <a href="https://wa.me/919876543210" class="contact-link" target="_blank">
-            +91 98765 43210 <i class="bi bi-arrow-right"></i>
-          </a>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="contact-card">
-          <div class="contact-icon" style="background:#fff7ed;color:#d97706">
-            <i class="bi bi-geo-alt"></i>
-          </div>
-          <h5>Office</h5>
-          <p>Come say hello. We're happy to give you a walkthrough of BillMate in person.</p>
-          <a href="#" class="contact-link">
-            Pune, Maharashtra, India <i class="bi bi-arrow-right"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Feedback form -->
-    <div class="row justify-content-center mt-5">
-      <div class="col-lg-7">
-        <div class="p-4 bg-white border rounded-4 shadow-sm">
-          <h5 class="fw-bold mb-1">Send us a message</h5>
-          <p class="text-muted small mb-4">We read every message and respond personally.</p>
-          <div class="row g-3">
-            <div class="col-md-6">
-              <label class="form-label small fw-semibold text-muted">Your Name</label>
-              <input type="text" class="form-control" placeholder="Rahul Sharma"/>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label small fw-semibold text-muted">Email Address</label>
-              <input type="email" class="form-control" placeholder="rahul@example.com"/>
-            </div>
-            <div class="col-12">
-              <label class="form-label small fw-semibold text-muted">Subject</label>
-              <select class="form-select">
-                <option>General question</option>
-                <option>Feature request</option>
-                <option>Bug report</option>
-                <option>Pricing / billing</option>
-                <option>Partnership</option>
-              </select>
-            </div>
-            <div class="col-12">
-              <label class="form-label small fw-semibold text-muted">Message</label>
-              <textarea class="form-control" rows="4" placeholder="Tell us what's on your mind…"></textarea>
-            </div>
-            <div class="col-12">
-              <button class="btn btn-primary px-4" style="border-radius:9px;font-weight:700"
-                      onclick="this.innerHTML='<i class=\'bi bi-check-lg me-1\'></i> Sent!';this.disabled=true;this.classList.replace('btn-primary','btn-success')">
-                <i class="bi bi-send me-1"></i> Send Message
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</section>
+  </section>
 
 
-<!-- ════════════════════════════════
+  <!-- ════════════════════════════════
      FOOTER
 ════════════════════════════════ -->
-<footer class="footer">
-  <div class="container">
-    <div class="row g-4">
-      <div class="col-lg-4">
-        <div class="footer-brand">
-          <span class="brand-icon-sm"><i class="bi bi-receipt-cutoff"></i></span>BillMate
+  <footer class="footer">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <div class="footer-brand">
+            <span class="brand-icon-sm"><i class="bi bi-receipt-cutoff"></i></span>SmartBill
+          </div>
+          <div class="footer-tagline">Smart billing for growing businesses.</div>
+          <div class="mt-3 d-flex gap-3">
+            <a href="#" style="color:rgba(255,255,255,.4);font-size:1.1rem" onmouseover="this.style.color='#fff'"
+              onmouseout="this.style.color='rgba(255,255,255,.4)'"><i class="bi bi-twitter-x"></i></a>
+            <a href="#" style="color:rgba(255,255,255,.4);font-size:1.1rem" onmouseover="this.style.color='#fff'"
+              onmouseout="this.style.color='rgba(255,255,255,.4)'"><i class="bi bi-linkedin"></i></a>
+            <a href="#" style="color:rgba(255,255,255,.4);font-size:1.1rem" onmouseover="this.style.color='#fff'"
+              onmouseout="this.style.color='rgba(255,255,255,.4)'"><i class="bi bi-instagram"></i></a>
+          </div>
         </div>
-        <div class="footer-tagline">Smart billing for growing businesses.</div>
-        <div class="mt-3 d-flex gap-3">
-          <a href="#" style="color:rgba(255,255,255,.4);font-size:1.1rem" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.4)'"><i class="bi bi-twitter-x"></i></a>
-          <a href="#" style="color:rgba(255,255,255,.4);font-size:1.1rem" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.4)'"><i class="bi bi-linkedin"></i></a>
-          <a href="#" style="color:rgba(255,255,255,.4);font-size:1.1rem" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.4)'"><i class="bi bi-instagram"></i></a>
+        <div class="col-6 col-lg-2">
+          <div class="footer-heading">Product</div>
+          <ul class="footer-links">
+            <li><a href="index.html#features">Features</a></li>
+            <li><a href="index.html#pricing">Pricing</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="login.html">Login</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-lg-2">
+          <div class="footer-heading">App</div>
+          <ul class="footer-links">
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="billing.html">New Bill</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="reports.html">Reports</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-lg-2">
+          <div class="footer-heading">Company</div>
+          <ul class="footer-links">
+            <li><a href="about.html">Our Story</a></li>
+            <li><a href="about.html#team">Team</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Blog</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-lg-2">
+          <div class="footer-heading">Legal</div>
+          <ul class="footer-links">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Cookie Policy</a></li>
+          </ul>
         </div>
       </div>
-      <div class="col-6 col-lg-2">
-        <div class="footer-heading">Product</div>
-        <ul class="footer-links">
-          <li><a href="index.html#features">Features</a></li>
-          <li><a href="index.html#pricing">Pricing</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="login.html">Login</a></li>
-        </ul>
-      </div>
-      <div class="col-6 col-lg-2">
-        <div class="footer-heading">App</div>
-        <ul class="footer-links">
-          <li><a href="dashboard.html">Dashboard</a></li>
-          <li><a href="billing.html">New Bill</a></li>
-          <li><a href="products.html">Products</a></li>
-          <li><a href="reports.html">Reports</a></li>
-        </ul>
-      </div>
-      <div class="col-6 col-lg-2">
-        <div class="footer-heading">Company</div>
-        <ul class="footer-links">
-          <li><a href="about.html">Our Story</a></li>
-          <li><a href="about.html#team">Team</a></li>
-          <li><a href="#">Careers</a></li>
-          <li><a href="#">Blog</a></li>
-        </ul>
-      </div>
-      <div class="col-6 col-lg-2">
-        <div class="footer-heading">Legal</div>
-        <ul class="footer-links">
-          <li><a href="#">Privacy Policy</a></li>
-          <li><a href="#">Terms of Service</a></li>
-          <li><a href="#">Cookie Policy</a></li>
-        </ul>
+      <div class="footer-bottom">
+        <span>© 2026 SmartBill. All rights reserved.</span>
+        <span>Made with ❤️ for Indian businesses</span>
       </div>
     </div>
-    <div class="footer-bottom">
-      <span>© 2025 BillMate. All rights reserved.</span>
-      <span>Made with ❤️ for Indian businesses</span>
-    </div>
-  </div>
-</footer>
+  </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

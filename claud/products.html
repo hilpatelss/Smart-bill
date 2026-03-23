@@ -1,436 +1,403 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Products – BillMate</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Products – SmartBill</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
   <style>
-    :root {
-      --brand:#2563eb; --sidebar-bg:#0f172a; --sidebar-w:240px;
-      --body-bg:#f1f5f9; --card-bg:#fff; --text-main:#1e293b;
-      --text-muted:#64748b; --border:#e2e8f0; --font:'Plus Jakarta Sans',sans-serif;
-    }
-    *,*::before,*::after{box-sizing:border-box}
-    body{font-family:var(--font);background:var(--body-bg);color:var(--text-main);margin:0}
 
-    /* Sidebar */
-    .sidebar{width:var(--sidebar-w);min-height:100vh;background:var(--sidebar-bg);position:fixed;top:0;left:0;display:flex;flex-direction:column;z-index:200}
-    .sidebar-brand{padding:1.25rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:.6rem;color:#fff;font-size:1.1rem;font-weight:700;text-decoration:none}
-    .sidebar-brand .icon-wrap{width:34px;height:34px;background:var(--brand);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem}
-    .sidebar-nav{padding:1rem 0;flex:1}
-    .nav-label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.35);padding:.6rem 1.5rem .25rem}
-    .nav-link-item{display:flex;align-items:center;gap:.65rem;padding:.55rem 1.5rem;color:rgba(255,255,255,.65);text-decoration:none;font-size:.875rem;font-weight:500;border-left:3px solid transparent;transition:color .15s,background .15s,border-color .15s}
-    .nav-link-item:hover{color:#fff;background:rgba(255,255,255,.06)}
-    .nav-link-item.active{color:#fff;background:rgba(37,99,235,.25);border-left-color:var(--brand)}
-    .nav-link-item i{font-size:1rem;width:18px;text-align:center}
-    .sidebar-footer{padding:1rem 1.5rem;border-top:1px solid rgba(255,255,255,.08)}
-    .sidebar-footer a{color:rgba(255,255,255,.5);text-decoration:none;font-size:.85rem;display:flex;align-items:center;gap:.5rem}
-    .sidebar-footer a:hover{color:#fff}
-
-    .main-content{margin-left:var(--sidebar-w);padding:2rem;min-height:100vh}
-    .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem}
-    .topbar h1{font-size:1.35rem;font-weight:700;margin:0}
-
-    /* Panel cards */
-    .panel{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.5rem}
-    .panel-header{padding:.9rem 1.25rem;border-bottom:1px solid var(--border);font-weight:600;font-size:.9rem;background:#f8fafc;display:flex;align-items:center;gap:.5rem}
-    .panel-body{padding:1.25rem}
-    .form-label{font-size:.8rem;font-weight:600;color:var(--text-muted);margin-bottom:.3rem}
-    .form-control,.form-select{font-size:.875rem;border-color:var(--border);border-radius:8px}
-    .form-control:focus,.form-select:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
-
-    /* Product table */
-    .prod-table{width:100%;border-collapse:collapse;font-size:.875rem}
-    .prod-table th{background:#f8fafc;color:var(--text-muted);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:.65rem 1rem;text-align:left;border-bottom:2px solid var(--border)}
-    .prod-table td{padding:.75rem 1rem;border-bottom:1px solid var(--border);vertical-align:middle}
-    .prod-table tr:last-child td{border-bottom:none}
-    .prod-table tr:hover td{background:#f8fafc}
-
-    /* Stock badges */
-    .badge-in{background:#dcfce7;color:#15803d;font-size:.7rem;padding:3px 10px;border-radius:99px;font-weight:600}
-    .badge-low{background:#fef9c3;color:#a16207;font-size:.7rem;padding:3px 10px;border-radius:99px;font-weight:600}
-    .badge-out{background:#fee2e2;color:#dc2626;font-size:.7rem;padding:3px 10px;border-radius:99px;font-weight:600}
-
-    /* Search bar */
-    .search-wrap{position:relative;max-width:280px}
-    .search-wrap i{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#94a3b8}
-    .search-wrap input{padding-left:2.2rem;border-radius:8px;font-size:.875rem;border-color:var(--border)}
-    .search-wrap input:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
-
-    @media(max-width:768px){
-      .sidebar{transform:translateX(-100%);transition:transform .25s}
-      .sidebar.open{transform:translateX(0)}
-      .main-content{margin-left:0;padding:1rem}
-    }
   </style>
 </head>
+
 <body>
 
-<!-- Sidebar -->
-<aside class="sidebar" id="sidebar">
-  <a href="dashboard.html" class="sidebar-brand">
-    <span class="icon-wrap"><i class="bi bi-receipt-cutoff"></i></span>BillMate
-  </a>
-  <nav class="sidebar-nav">
-    <div class="nav-label">Main</div>
-    <a href="dashboard.html" class="nav-link-item"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
-    <a href="billing.html"   class="nav-link-item"><i class="bi bi-file-earmark-text"></i> New Bill</a>
-    <a href="sales-history.html" class="nav-link-item"><i class="bi bi-clock-history"></i> Sales History</a>
-    <div class="nav-label mt-2">Manage</div>
-    <a href="products.html"  class="nav-link-item active"><i class="bi bi-box-seam"></i> Products</a>
-    <a href="customers.html" class="nav-link-item"><i class="bi bi-people"></i> Customers</a>
-    <div class="nav-label mt-2">Business</div>
-    <a href="reports.html"   class="nav-link-item"><i class="bi bi-bar-chart-line"></i> Reports</a>
-    <a href="settings.html"  class="nav-link-item"><i class="bi bi-gear"></i> Settings</a>
-  </nav>
-  <div class="sidebar-footer"><a href="login.html"><i class="bi bi-box-arrow-left"></i> Logout</a></div>
-</aside>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="dashboard.html" class="sidebar-brand">
+      <span class="icon-wrap"><i class="bi bi-receipt-cutoff"></i></span>SmartBill
+    </a>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Main</div>
+      <a href="dashboard.html" class="nav-link-item"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+      <a href="billing.html" class="nav-link-item"><i class="bi bi-file-earmark-text"></i> New Bill</a>
+      <a href="sales-history.html" class="nav-link-item"><i class="bi bi-clock-history"></i> Sales History</a>
+      <div class="nav-label mt-2">Manage</div>
+      <a href="products.html" class="nav-link-item active"><i class="bi bi-box-seam"></i> Products</a>
+      <a href="customers.html" class="nav-link-item"><i class="bi bi-people"></i> Customers</a>
+      <div class="nav-label mt-2">Business</div>
+      <a href="reports.html" class="nav-link-item"><i class="bi bi-bar-chart-line"></i> Reports</a>
+      <a href="settings.html" class="nav-link-item"><i class="bi bi-gear"></i> Settings</a>
+    </nav>
+    <div class="sidebar-footer"><a href="login.html"><i class="bi bi-box-arrow-left"></i> Logout</a></div>
+  </aside>
 
-<main class="main-content">
+  <main class="main-content">
 
-  <!-- Topbar -->
-  <div class="topbar">
-    <div>
-      <button class="btn btn-sm btn-outline-secondary me-2 d-md-none"
-              onclick="document.getElementById('sidebar').classList.toggle('open')">
-        <i class="bi bi-list"></i>
+    <!-- Topbar -->
+    <div class="topbar">
+      <div>
+        <button class="btn btn-sm btn-outline-secondary me-2 d-md-none"
+          onclick="document.getElementById('sidebar').classList.toggle('open')">
+          <i class="bi bi-list"></i>
+        </button>
+        <h1 class="d-inline">Products</h1>
+        <p class="text-muted small mb-0">Manage your product catalogue</p>
+      </div>
+      <!-- Button opens the Add Product modal -->
+      <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addProductModal">
+        <i class="bi bi-plus-lg me-1"></i> Add Product
       </button>
-      <h1 class="d-inline">Products</h1>
-      <p class="text-muted small mb-0">Manage your product catalogue</p>
     </div>
-    <!-- Button opens the Add Product modal -->
-    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addProductModal">
-      <i class="bi bi-plus-lg me-1"></i> Add Product
-    </button>
-  </div>
 
-  <!-- Stats strip -->
-  <div class="row g-3 mb-4">
-    <div class="col-6 col-md-3">
-      <div class="panel mb-0 p-3 text-center">
-        <div class="fw-700 fs-4 fw-bold">124</div>
-        <div class="small text-muted">Total Products</div>
+    <!-- Stats strip -->
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-md-3">
+        <div class="panel mb-0 p-3 text-center">
+          <div class="fw-700 fs-4 fw-bold">124</div>
+          <div class="small text-muted">Total Products</div>
+        </div>
       </div>
-    </div>
-    <div class="col-6 col-md-3">
-      <div class="panel mb-0 p-3 text-center">
-        <div class="fw-700 fs-4 fw-bold text-success">108</div>
-        <div class="small text-muted">In Stock</div>
+      <div class="col-6 col-md-3">
+        <div class="panel mb-0 p-3 text-center">
+          <div class="fw-700 fs-4 fw-bold text-success">108</div>
+          <div class="small text-muted">In Stock</div>
+        </div>
       </div>
-    </div>
-    <div class="col-6 col-md-3">
-      <div class="panel mb-0 p-3 text-center">
-        <div class="fw-700 fs-4 fw-bold text-warning">13</div>
-        <div class="small text-muted">Low Stock</div>
+      <div class="col-6 col-md-3">
+        <div class="panel mb-0 p-3 text-center">
+          <div class="fw-700 fs-4 fw-bold text-warning">13</div>
+          <div class="small text-muted">Low Stock</div>
+        </div>
       </div>
-    </div>
-    <div class="col-6 col-md-3">
-      <div class="panel mb-0 p-3 text-center">
-        <div class="fw-700 fs-4 fw-bold text-danger">3</div>
-        <div class="small text-muted">Out of Stock</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Product List Panel -->
-  <div class="panel">
-    <div class="panel-header justify-content-between">
-      <span><i class="bi bi-box-seam text-primary"></i> Product List</span>
-      <!-- Search input — JS filters the table rows live -->
-      <div class="search-wrap">
-        <i class="bi bi-search"></i>
-        <input type="text" class="form-control form-control-sm"
-               id="searchInput" placeholder="Search products…"
-               oninput="filterTable()"/>
+      <div class="col-6 col-md-3">
+        <div class="panel mb-0 p-3 text-center">
+          <div class="fw-700 fs-4 fw-bold text-danger">3</div>
+          <div class="small text-muted">Out of Stock</div>
+        </div>
       </div>
     </div>
 
-    <!-- Filter buttons -->
-    <div class="px-3 pt-3 pb-0 d-flex gap-2 flex-wrap">
-      <button class="btn btn-sm btn-primary"   onclick="filterBy('')">All</button>
-      <button class="btn btn-sm btn-outline-success"  onclick="filterBy('in-stock')">In Stock</button>
-      <button class="btn btn-sm btn-outline-warning"  onclick="filterBy('low-stock')">Low Stock</button>
-      <button class="btn btn-sm btn-outline-danger"   onclick="filterBy('out-stock')">Out of Stock</button>
-    </div>
+    <!-- Product List Panel -->
+    <div class="panel">
+      <div class="panel-header justify-content-between">
+        <span><i class="bi bi-box-seam text-primary"></i> Product List</span>
+        <!-- Search input — JS filters the table rows live -->
+        <div class="search-wrap">
+          <i class="bi bi-search"></i>
+          <input type="text" class="form-control form-control-sm" id="searchInput" placeholder="Search products…"
+            oninput="filterTable()" />
+        </div>
+      </div>
 
-    <div class="table-responsive">
-      <table class="prod-table" id="productTable">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Product Name</th>
-            <th>Category</th>
-            <th>Unit Price</th>
-            <th>GST %</th>
-            <th>Stock</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="productTableBody">
-          <!--
+      <!-- Filter buttons -->
+      <div class="px-3 pt-3 pb-0 d-flex gap-2 flex-wrap">
+        <button class="btn btn-sm btn-primary" onclick="filterBy('')">All</button>
+        <button class="btn btn-sm btn-outline-success" onclick="filterBy('in-stock')">In Stock</button>
+        <button class="btn btn-sm btn-outline-warning" onclick="filterBy('low-stock')">Low Stock</button>
+        <button class="btn btn-sm btn-outline-danger" onclick="filterBy('out-stock')">Out of Stock</button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="prod-table" id="productTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Product Name</th>
+              <th>Category</th>
+              <th>Unit Price</th>
+              <th>GST %</th>
+              <th>Stock</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="productTableBody">
+            <!--
             Each row has a data-status attribute used by filterBy().
             In production these rows are rendered by Django template tags.
           -->
-          <tr data-status="in-stock">
-            <td>1</td><td><strong>Rice (5kg)</strong></td><td>Groceries</td>
-            <td>₹ 320</td><td>5%</td><td>240</td>
-            <td><span class="badge-in">In Stock</span></td>
-            <td>
-              <button class="btn btn-sm btn-outline-primary py-0 me-1"
-                      onclick="editProduct('Rice (5kg)', 320, 5, 240)"
-                      data-bs-toggle="modal" data-bs-target="#editProductModal">
-                <i class="bi bi-pencil"></i>
-              </button>
-              <button class="btn btn-sm btn-outline-danger py-0"
-                      onclick="deleteRow(this)">
-                <i class="bi bi-trash3"></i>
-              </button>
-            </td>
-          </tr>
-          <tr data-status="in-stock">
-            <td>2</td><td><strong>Sunflower Oil (1L)</strong></td><td>Groceries</td>
-            <td>₹ 145</td><td>5%</td><td>80</td>
-            <td><span class="badge-in">In Stock</span></td>
-            <td>
-              <button class="btn btn-sm btn-outline-primary py-0 me-1"
-                      onclick="editProduct('Sunflower Oil (1L)', 145, 5, 80)"
-                      data-bs-toggle="modal" data-bs-target="#editProductModal">
-                <i class="bi bi-pencil"></i>
-              </button>
-              <button class="btn btn-sm btn-outline-danger py-0" onclick="deleteRow(this)">
-                <i class="bi bi-trash3"></i>
-              </button>
-            </td>
-          </tr>
-          <tr data-status="low-stock">
-            <td>3</td><td><strong>Notebook (Pack of 5)</strong></td><td>Stationery</td>
-            <td>₹ 120</td><td>12%</td><td>8</td>
-            <td><span class="badge-low">Low Stock</span></td>
-            <td>
-              <button class="btn btn-sm btn-outline-primary py-0 me-1"
-                      onclick="editProduct('Notebook (Pack of 5)', 120, 12, 8)"
-                      data-bs-toggle="modal" data-bs-target="#editProductModal">
-                <i class="bi bi-pencil"></i>
-              </button>
-              <button class="btn btn-sm btn-outline-danger py-0" onclick="deleteRow(this)">
-                <i class="bi bi-trash3"></i>
-              </button>
-            </td>
-          </tr>
-          <tr data-status="low-stock">
-            <td>4</td><td><strong>Pen Set</strong></td><td>Stationery</td>
-            <td>₹ 60</td><td>12%</td><td>5</td>
-            <td><span class="badge-low">Low Stock</span></td>
-            <td>
-              <button class="btn btn-sm btn-outline-primary py-0 me-1"
-                      onclick="editProduct('Pen Set', 60, 12, 5)"
-                      data-bs-toggle="modal" data-bs-target="#editProductModal">
-                <i class="bi bi-pencil"></i>
-              </button>
-              <button class="btn btn-sm btn-outline-danger py-0" onclick="deleteRow(this)">
-                <i class="bi bi-trash3"></i>
-              </button>
-            </td>
-          </tr>
-          <tr data-status="out-stock">
-            <td>5</td><td><strong>Laptop Stand</strong></td><td>Electronics</td>
-            <td>₹ 850</td><td>18%</td><td>0</td>
-            <td><span class="badge-out">Out of Stock</span></td>
-            <td>
-              <button class="btn btn-sm btn-outline-primary py-0 me-1"
-                      onclick="editProduct('Laptop Stand', 850, 18, 0)"
-                      data-bs-toggle="modal" data-bs-target="#editProductModal">
-                <i class="bi bi-pencil"></i>
-              </button>
-              <button class="btn btn-sm btn-outline-danger py-0" onclick="deleteRow(this)">
-                <i class="bi bi-trash3"></i>
-              </button>
-            </td>
-          </tr>
-          <tr data-status="in-stock">
-            <td>6</td><td><strong>USB Hub</strong></td><td>Electronics</td>
-            <td>₹ 590</td><td>18%</td><td>34</td>
-            <td><span class="badge-in">In Stock</span></td>
-            <td>
-              <button class="btn btn-sm btn-outline-primary py-0 me-1"
-                      onclick="editProduct('USB Hub', 590, 18, 34)"
-                      data-bs-toggle="modal" data-bs-target="#editProductModal">
-                <i class="bi bi-pencil"></i>
-              </button>
-              <button class="btn btn-sm btn-outline-danger py-0" onclick="deleteRow(this)">
-                <i class="bi bi-trash3"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div><!-- /panel -->
+            <tr data-status="in-stock">
+              <td>1</td>
+              <td><strong>Rice (5kg)</strong></td>
+              <td>Groceries</td>
+              <td>₹ 320</td>
+              <td>5%</td>
+              <td>240</td>
+              <td><span class="badge-in">In Stock</span></td>
+              <td>
+                <button class="btn btn-sm btn-outline-primary py-0 me-1"
+                  onclick="editProduct('Rice (5kg)', 320, 5, 240)" data-bs-toggle="modal"
+                  data-bs-target="#editProductModal">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger py-0" onclick="deleteRow(this)">
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </td>
+            </tr>
+            <tr data-status="in-stock">
+              <td>2</td>
+              <td><strong>Sunflower Oil (1L)</strong></td>
+              <td>Groceries</td>
+              <td>₹ 145</td>
+              <td>5%</td>
+              <td>80</td>
+              <td><span class="badge-in">In Stock</span></td>
+              <td>
+                <button class="btn btn-sm btn-outline-primary py-0 me-1"
+                  onclick="editProduct('Sunflower Oil (1L)', 145, 5, 80)" data-bs-toggle="modal"
+                  data-bs-target="#editProductModal">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger py-0" onclick="deleteRow(this)">
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </td>
+            </tr>
+            <tr data-status="low-stock">
+              <td>3</td>
+              <td><strong>Notebook (Pack of 5)</strong></td>
+              <td>Stationery</td>
+              <td>₹ 120</td>
+              <td>12%</td>
+              <td>800</td>
+              <td><span class="badge-low">Low Stock</span></td>
+              <td>
+                <button class="btn btn-sm btn-outline-primary py-0 me-1"
+                  onclick="editProduct('Notebook (Pack of 5)', 120, 12, 8)" data-bs-toggle="modal"
+                  data-bs-target="#editProductModal">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger py-0" onclick="deleteRow(this)">
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </td>
+            </tr>
+            <tr data-status="low-stock">
+              <td>4</td>
+              <td><strong>Pen Set</strong></td>
+              <td>Stationery</td>
+              <td>₹ 60</td>
+              <td>12%</td>
+              <td>5</td>
+              <td><span class="badge-low">Low Stock</span></td>
+              <td>
+                <button class="btn btn-sm btn-outline-primary py-0 me-1" onclick="editProduct('Pen Set', 60, 12, 5)"
+                  data-bs-toggle="modal" data-bs-target="#editProductModal">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger py-0" onclick="deleteRow(this)">
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </td>
+            </tr>
+            <tr data-status="out-stock">
+              <td>5</td>
+              <td><strong>Laptop Stand</strong></td>
+              <td>Electronics</td>
+              <td>₹ 850</td>
+              <td>18%</td>
+              <td>0</td>
+              <td><span class="badge-out">Out of Stock</span></td>
+              <td>
+                <button class="btn btn-sm btn-outline-primary py-0 me-1"
+                  onclick="editProduct('Laptop Stand', 850, 18, 0)" data-bs-toggle="modal"
+                  data-bs-target="#editProductModal">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger py-0" onclick="deleteRow(this)">
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </td>
+            </tr>
+            <tr data-status="in-stock">
+              <td>6</td>
+              <td><strong>USB Hub</strong></td>
+              <td>Electronics</td>
+              <td>₹ 590</td>
+              <td>18%</td>
+              <td>34</td>
+              <td><span class="badge-in">In Stock</span></td>
+              <td>
+                <button class="btn btn-sm btn-outline-primary py-0 me-1" onclick="editProduct('USB Hub', 590, 18, 34)"
+                  data-bs-toggle="modal" data-bs-target="#editProductModal">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger py-0" onclick="deleteRow(this)">
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div><!-- /panel -->
 
-</main>
+  </main>
 
 
-<!-- ════════════════════════════════
+  <!-- ════════════════════════════════
      ADD PRODUCT MODAL
 ════════════════════════════════ -->
-<div class="modal fade" id="addProductModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title fw-bold"><i class="bi bi-plus-circle me-2 text-primary"></i>Add New Product</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <!-- In production: form action="{% url 'add_product' %}" method="post" -->
-        <form id="addProductForm">
-          <div class="mb-3">
-            <label class="form-label">Product Name *</label>
-            <input type="text" class="form-control" id="newName" placeholder="e.g. Sugar (1kg)" required/>
-          </div>
-          <div class="row g-2">
-            <div class="col-6">
-              <label class="form-label">Category</label>
-              <select class="form-select" id="newCategory">
-                <option>Groceries</option>
-                <option>Stationery</option>
-                <option>Electronics</option>
-                <option>Clothing</option>
-                <option>Other</option>
-              </select>
+  <div class="modal fade" id="addProductModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold"><i class="bi bi-plus-circle me-2 text-primary"></i>Add New Product</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- In production: form action="{% url 'add_product' %}" method="post" -->
+          <form id="addProductForm">
+            <div class="mb-3">
+              <label class="form-label">Product Name *</label>
+              <input type="text" class="form-control" id="newName" placeholder="e.g. Sugar (1kg)" required />
             </div>
-            <div class="col-6">
-              <label class="form-label">Unit Price (₹) *</label>
-              <input type="number" class="form-control" id="newPrice" placeholder="0.00" min="0"/>
+            <div class="row g-2">
+              <div class="col-6">
+                <label class="form-label">Category</label>
+                <select class="form-select" id="newCategory">
+                  <option>Groceries</option>
+                  <option>Stationery</option>
+                  <option>Electronics</option>
+                  <option>Clothing</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label class="form-label">Unit Price (₹) *</label>
+                <input type="number" class="form-control" id="newPrice" placeholder="0.00" min="0" />
+              </div>
+              <div class="col-6">
+                <label class="form-label">GST %</label>
+                <select class="form-select" id="newGst">
+                  <option value="0">0%</option>
+                  <option value="5">5%</option>
+                  <option value="12">12%</option>
+                  <option value="18" selected>18%</option>
+                  <option value="28">28%</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label class="form-label">Stock Quantity</label>
+                <input type="number" class="form-control" id="newStock" placeholder="0" min="0" />
+              </div>
             </div>
-            <div class="col-6">
-              <label class="form-label">GST %</label>
-              <select class="form-select" id="newGst">
-                <option value="0">0%</option>
-                <option value="5">5%</option>
-                <option value="12">12%</option>
-                <option value="18" selected>18%</option>
-                <option value="28">28%</option>
-              </select>
+            <div class="mt-3">
+              <label class="form-label">Description <span class="text-muted">(optional)</span></label>
+              <textarea class="form-control" rows="2" placeholder="Brief product description…"></textarea>
             </div>
-            <div class="col-6">
-              <label class="form-label">Stock Quantity</label>
-              <input type="number" class="form-control" id="newStock" placeholder="0" min="0"/>
-            </div>
-          </div>
-          <div class="mt-3">
-            <label class="form-label">Description <span class="text-muted">(optional)</span></label>
-            <textarea class="form-control" rows="2" placeholder="Brief product description…"></textarea>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button class="btn btn-primary" onclick="saveNewProduct()">
-          <i class="bi bi-check-lg me-1"></i> Save Product
-        </button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-primary" onclick="saveNewProduct()">
+            <i class="bi bi-check-lg me-1"></i> Save Product
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- ════════════════════════════════
+  <!-- ════════════════════════════════
      EDIT PRODUCT MODAL
 ════════════════════════════════ -->
-<div class="modal fade" id="editProductModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title fw-bold"><i class="bi bi-pencil me-2 text-warning"></i>Edit Product</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <form>
-          <div class="mb-3">
-            <label class="form-label">Product Name</label>
-            <input type="text" class="form-control" id="editName"/>
-          </div>
-          <div class="row g-2">
-            <div class="col-6">
-              <label class="form-label">Unit Price (₹)</label>
-              <input type="number" class="form-control" id="editPrice"/>
+  <div class="modal fade" id="editProductModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold"><i class="bi bi-pencil me-2 text-warning"></i>Edit Product</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <label class="form-label">Product Name</label>
+              <input type="text" class="form-control" id="editName" />
             </div>
-            <div class="col-6">
-              <label class="form-label">GST %</label>
-              <input type="number" class="form-control" id="editGst"/>
+            <div class="row g-2">
+              <div class="col-6">
+                <label class="form-label">Unit Price (₹)</label>
+                <input type="number" class="form-control" id="editPrice" />
+              </div>
+              <div class="col-6">
+                <label class="form-label">GST %</label>
+                <input type="number" class="form-control" id="editGst" />
+              </div>
+              <div class="col-12">
+                <label class="form-label">Stock Quantity</label>
+                <input type="number" class="form-control" id="editStock" />
+              </div>
             </div>
-            <div class="col-12">
-              <label class="form-label">Stock Quantity</label>
-              <input type="number" class="form-control" id="editStock"/>
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button class="btn btn-warning text-white" data-bs-dismiss="modal">
-          <i class="bi bi-check-lg me-1"></i> Update Product
-        </button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-warning text-white" data-bs-dismiss="modal">
+            <i class="bi bi-check-lg me-1"></i> Update Product
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-  // ── Live search: hide rows whose text doesn't match ──
-  function filterTable() {
-    const query = document.getElementById('searchInput').value.toLowerCase();
-    document.querySelectorAll('#productTableBody tr').forEach(row => {
-      row.style.display = row.textContent.toLowerCase().includes(query) ? '' : 'none';
-    });
-  }
-
-  // ── Filter by stock status ──
-  function filterBy(status) {
-    document.querySelectorAll('#productTableBody tr').forEach(row => {
-      row.style.display = (!status || row.dataset.status === status) ? '' : 'none';
-    });
-  }
-
-  // ── Fill edit modal with clicked product's data ──
-  function editProduct(name, price, gst, stock) {
-    document.getElementById('editName').value  = name;
-    document.getElementById('editPrice').value = price;
-    document.getElementById('editGst').value   = gst;
-    document.getElementById('editStock').value = stock;
-  }
-
-  // ── Delete a table row (with confirmation) ──
-  function deleteRow(btn) {
-    if (confirm('Delete this product?')) {
-      btn.closest('tr').remove();
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // ── Live search: hide rows whose text doesn't match ──
+    function filterTable() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      document.querySelectorAll('#productTableBody tr').forEach(row => {
+        row.style.display = row.textContent.toLowerCase().includes(query) ? '' : 'none';
+      });
     }
-  }
 
-  // ── Save new product: adds a row to the table ──
-  function saveNewProduct() {
-    const name  = document.getElementById('newName').value.trim();
-    const price = document.getElementById('newPrice').value;
-    const gst   = document.getElementById('newGst').value;
-    const stock = document.getElementById('newStock').value || 0;
-    const cat   = document.getElementById('newCategory').value;
+    // ── Filter by stock status ──
+    function filterBy(status) {
+      document.querySelectorAll('#productTableBody tr').forEach(row => {
+        row.style.display = (!status || row.dataset.status === status) ? '' : 'none';
+      });
+    }
 
-    if (!name || !price) { alert('Name and price are required.'); return; }
+    // ── Fill edit modal with clicked product's data ──
+    function editProduct(name, price, gst, stock) {
+      document.getElementById('editName').value = name;
+      document.getElementById('editPrice').value = price;
+      document.getElementById('editGst').value = gst;
+      document.getElementById('editStock').value = stock;
+    }
 
-    // Determine badge based on stock number
-    let badgeHtml;
-    if (stock == 0)       badgeHtml = '<span class="badge-out">Out of Stock</span>';
-    else if (stock < 10)  badgeHtml = '<span class="badge-low">Low Stock</span>';
-    else                  badgeHtml = '<span class="badge-in">In Stock</span>';
+    // ── Delete a table row (with confirmation) ──
+    function deleteRow(btn) {
+      if (confirm('Delete this product?')) {
+        btn.closest('tr').remove();
+      }
+    }
 
-    const tbody = document.getElementById('productTableBody');
-    const rowCount = tbody.rows.length + 1;
+    // ── Save new product: adds a row to the table ──
+    function saveNewProduct() {
+      const name = document.getElementById('newName').value.trim();
+      const price = document.getElementById('newPrice').value;
+      const gst = document.getElementById('newGst').value;
+      const stock = document.getElementById('newStock').value || 0;
+      const cat = document.getElementById('newCategory').value;
 
-    tbody.insertAdjacentHTML('beforeend', `
+      if (!name || !price) { alert('Name and price are required.'); return; }
+
+      // Determine badge based on stock number
+      let badgeHtml;
+      if (stock == 0) badgeHtml = '<span class="badge-out">Out of Stock</span>';
+      else if (stock < 10) badgeHtml = '<span class="badge-low">Low Stock</span>';
+      else badgeHtml = '<span class="badge-in">In Stock</span>';
+
+      const tbody = document.getElementById('productTableBody');
+      const rowCount = tbody.rows.length + 1;
+
+      tbody.insertAdjacentHTML('beforeend', `
       <tr data-status="${stock == 0 ? 'out-stock' : (stock < 10 ? 'low-stock' : 'in-stock')}">
         <td>${rowCount}</td>
         <td><strong>${name}</strong></td>
@@ -451,10 +418,11 @@
         </td>
       </tr>`);
 
-    // Close modal and reset form
-    bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
-    document.getElementById('addProductForm').reset();
-  }
-</script>
+      // Close modal and reset form
+      bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
+      document.getElementById('addProductForm').reset();
+    }
+  </script>
 </body>
+
 </html>
