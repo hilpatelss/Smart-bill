@@ -74,51 +74,49 @@
 
         <!-- ── TAB: Shop Details ── -->
         <div id="tab-shop">
-          <div class="panel">
-            <div class="panel-header"><i class="bi bi-shop text-primary"></i> Shop Details</div>
-            <div class="panel-body">
-              <div class="row g-3">
-                <div class="col-12">
-                  <label class="form-label">Shop / Business Name *</label>
-                  <input type="text" class="form-control" id="shopName" value="BillMate Store" />
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">Owner Name</label>
-                  <input type="text" class="form-control" value="Rahul Sharma" />
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">Phone Number</label>
-                  <input type="tel" class="form-control" value="+91 98765 43210" />
-                </div>
-                <div class="col-12">
-                  <label class="form-label">Email</label>
-                  <input type="email" class="form-control" value="shop@billmate.in" />
-                </div>
-                <div class="col-12">
-                  <label class="form-label">Full Address</label>
-                  <textarea class="form-control" rows="2">12, Market Road, Pune – 411001</textarea>
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">GSTIN</label>
-                  <input type="text" class="form-control" value="27AABCU9603R1ZM"
-                    placeholder="GST Identification Number" />
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">PAN Number</label>
-                  <input type="text" class="form-control" placeholder="optional" />
+          <form method="post" action="{% url 'editbiz' %}">
+            {% csrf_token %}
+            <div class="panel">
+              <div class="panel-header"><i class="bi bi-shop text-primary"></i> Shop Details</div>
+              <div class="panel-body">
+                <div class="row g-3">
+                  <div class="col-12">
+                    <label class="form-label">Shop / Business Name *</label>
+                    <input type="text" class="form-control" name="bizName" id="shopName" value="BillMate Store" />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Owner Name</label>
+                    <input type="text" class="form-control" name="full_name" value="hil Patel" />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Phone Number</label>
+                    <input type="tel" class="form-control" name="phone_number" value="+91 92651 86613" />
+                  </div>
+                
+                  <div class="col-12">
+                    <label class="form-label">Full Address</label>
+                    <textarea class="form-control" name="full_address" rows="2">12, Market Road, Pune – 411001</textarea>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">GSTIN</label>
+                    <input type="text" class="form-control" name="Gstin" value="27AABCU9603R1ZM"
+                      placeholder="GST Identification Number" />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">PAN Number</label>
+                    <input type="text" class="form-control" name="Pan_number" placeholder="optional" />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-
-          <!-- Logo upload -->
-          <div class="panel">
-            <div class="panel-header"><i class="bi bi-image text-success"></i> Shop Logo</div>
-            <div class="panel-body">
-              <div class="row align-items-center g-3">
-                <div class="col-auto">
-                  <!-- Default logo placeholder -->
-                  <div class="logo-preview d-flex align-items-center justify-content-center"
+            <!-- Logo upload -->
+            <div class="panel">
+              <div class="panel-header"><i class="bi bi-image text-success"></i> Shop Logo</div>
+              <div class="panel-body">
+                <div class="row align-items-center g-3">
+                  <div class="col-auto">
+                    <!-- Default logo placeholder -->
+                    <div class="logo-preview d-flex align-items-center justify-content-center"
                     style="background:#eff6ff;color:#2563eb;font-size:2rem;width:80px;height:80px;border-radius:8px">
                     <i class="bi bi-receipt-cutoff"></i>
                   </div>
@@ -131,11 +129,12 @@
                     <div class="text-muted" style="font-size:.75rem">PNG, JPG — max 2MB. Recommended: 200×200px</div>
                   </div>
                   <!-- Hidden file input — triggered by div click above -->
-                  <input type="file" id="logoInput" accept="image/*" class="d-none" onchange="previewLogo(event)" />
+                  <input type="file" id="logoInput" accept="image/*" name="shop_logo" class="d-none" onchange="previewLogo(event)" />
                 </div>
               </div>
             </div>
           </div>
+        </form>
 
           <button class="btn btn-primary" onclick="saveSettings()">
             <i class="bi bi-check-lg me-1"></i> Save Shop Settings
@@ -145,26 +144,25 @@
 
         <!-- ── TAB: Invoice Format ── -->
         <div id="tab-invoice" class="d-none">
+          <form action="{% url 'editinv' %}" method="post">
+            {% csrf_token %}
           <div class="panel">
             <div class="panel-header"><i class="bi bi-receipt text-primary"></i> Invoice Format</div>
             <div class="panel-body">
               <div class="row g-3">
                 <div class="col-md-6">
                   <label class="form-label">Invoice Number Prefix</label>
-                  <input type="text" class="form-control" value="INV-" id="invPrefix" oninput="updatePreview()" />
+                  <input type="text" class="form-control" name="Inv_prefix" value="INV-" id="invPrefix" oninput="updatePreview()" />
                 </div>
-                <div class="col-md-6">
-                  <label class="form-label">Starting Number</label>
-                  <input type="number" class="form-control" value="1" min="1" id="invStart" oninput="updatePreview()" />
-                </div>
+            
                 <div class="col-12">
                   <label class="form-label">Invoice Footer Text</label>
-                  <textarea class="form-control" rows="2" id="invFooter"
+                  <textarea class="form-control" rows="2" name="Inv_footer" id="invFooter"
                     oninput="updatePreview()">Thank you for your purchase! For queries, contact us at shop@billmate.in</textarea>
                 </div>
                 <div class="col-md-6">
                   <label class="form-label">Invoice Due Days</label>
-                  <select class="form-select">
+                  <select class="form-select" name="Inv_due_days">
                     <option>On Receipt</option>
                     <option>7 days</option>
                     <option selected>15 days</option>
@@ -174,11 +172,11 @@
                 <div class="col-md-6">
                   <div class="mt-4">
                     <div class="form-check form-switch">
-                      <input class="form-check-input" type="checkbox" id="showSignature" checked />
+                      <input class="form-check-input" name="Show_signature_area" type="checkbox" id="showSignature" checked />
                       <label class="form-check-label small" for="showSignature">Show signature area</label>
                     </div>
                     <div class="form-check form-switch mt-2">
-                      <input class="form-check-input" type="checkbox" id="showTerms" checked />
+                      <input class="form-check-input" name="Show_TC" type="checkbox" id="showTerms" checked />
                       <label class="form-check-label small" for="showTerms">Show terms &amp; conditions</label>
                     </div>
                   </div>
@@ -186,6 +184,7 @@
               </div>
             </div>
           </div>
+          </form>
 
           <!-- Live preview of invoice number -->
           <div class="panel">
@@ -223,17 +222,19 @@
 
         <!-- ── TAB: Account ── -->
         <div id="tab-account" class="d-none">
+          <form action="{% url 'edituser' %}" method="post">
+            {% csrf_token %}
           <div class="panel">
             <div class="panel-header"><i class="bi bi-person-gear text-primary"></i> Account Settings</div>
             <div class="panel-body">
               <div class="row g-3">
                 <div class="col-md-6">
                   <label class="form-label">Username</label>
-                  <input type="text" class="form-control" value="admin" />
+                  <input type="text" class="form-control" name="username" value="admin" />
                 </div>
                 <div class="col-md-6">
                   <label class="form-label">Display Name</label>
-                  <input type="text" class="form-control" value="Rahul Sharma" />
+                  <input type="text" class="form-control" name="full_name" value="Hil Patel" />
                 </div>
                 <div class="col-12">
                   <hr />
@@ -243,19 +244,20 @@
                 </div>
                 <div class="col-md-4">
                   <label class="form-label">Current Password</label>
-                  <input type="password" class="form-control" placeholder="••••••••" />
+                  <input type="password" name="pass1" class="form-control" placeholder="••••••••" />
                 </div>
                 <div class="col-md-4">
                   <label class="form-label">New Password</label>
-                  <input type="password" class="form-control" placeholder="••••••••" />
+                  <input type="password" name="pass2" class="form-control" placeholder="••••••••" />
                 </div>
                 <div class="col-md-4">
                   <label class="form-label">Confirm Password</label>
-                  <input type="password" class="form-control" placeholder="••••••••" />
+                  <input type="password" name="pass3" class="form-control" placeholder="••••••••" />
                 </div>
               </div>
             </div>
           </div>
+          </form>
 
           <!-- Danger zone -->
           <div class="panel border-danger">
@@ -297,7 +299,7 @@
   <script>
     // ── Tab switching ──
     // Hides all tab panels, then shows the clicked one.
-    const allTabs = ['shop', 'invoice',  'account'];
+    const allTabs = ['shop', 'invoice', 'account'];
     function showTab(tabName, linkEl) {
       allTabs.forEach(t => document.getElementById('tab-' + t).classList.add('d-none'));
       document.getElementById('tab-' + tabName).classList.remove('d-none');

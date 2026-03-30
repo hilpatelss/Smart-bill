@@ -42,8 +42,8 @@
       action="{% url 'dashboard' %}" redirects to dashboard after submit.
       In production: action="{% url 'signin' %}" and method="post".
     -->
-    <form id="login-form" action="{% url 'dashboard' %}" method="get" novalidate>
-
+    <form id="login-form"  method="post" >
+      {% csrf_token %}
       <div class="mb-3">
         <label class="form-label" for="username">Username</label>
         <input type="text" class="form-control" id="username"
@@ -79,7 +79,7 @@
 
     <div class="text-center">
       <span class="small text-muted">Don't have an account? </span>
-      <a href="#" class="small text-primary fw-semibold text-decoration-none">Create account</a>
+      <a href="{% url 'signup' %}" class="small text-primary fw-semibold text-decoration-none">Create account</a>
     </div>
 
     <!-- Demo hint badge -->
