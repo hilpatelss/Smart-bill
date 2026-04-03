@@ -44,6 +44,7 @@ def editinv(request):
         Inv_due_days = request.POST.get(Inv_due_days)
         Show_signature_area = request.POST.get(Show_signature_area)
         Show_TC = request.POST.get(Show_TC)
+        print(Inv_prefix,Inv_footer,Inv_due_days,Show_signature_area,Show_TC)
         return redirect('/settings/#tab-invoice')
 
 @login_required(login_url="/signin/")   
@@ -54,6 +55,7 @@ def edituser(request):
         pass1 = request.POST.get(pass1)
         pass2 = request.POST.get(pass2)
         pass3 = request.POST.get(pass3)
+        print(username,full_name,pass1,pass2,pass3)
         return redirect('/settings/#tab-account')
  
 @login_required(login_url="/signin/")   
@@ -62,7 +64,9 @@ def editcustomer(request):
         Customer_name = request.POST.get(Customer_name)
         Customer_mobile = request.POST.get(Customer_mobile)
         Customer_email = request.POST.get(Customer_email)
+        print(Customer_name,Customer_mobile,Customer_email)
         return redirect('/settings/#tab-account')
+    
 
 @login_required(login_url="/signin/")   
 def addcustomer(request):
@@ -70,6 +74,7 @@ def addcustomer(request):
         Customer_name = request.POST.get(Customer_name)
         Customer_mobile = request.POST.get(Customer_mobile)
         Customer_email = request.POST.get(Customer_email)
+        print(Customer_name,Customer_mobile,Customer_email)
         return redirect('/settings/#tab-account')
  
 @login_required(login_url="/signin/")
@@ -102,14 +107,15 @@ def signin(request):
     if request.method =="POST":
         username = request.POST.get('username')
         password = request.POST.get('password')
-
+         
+        print(username,password)
         if not User.objects.filter(username = username).exists():
             messages.info(request, 'invalid Username')
             return redirect('/signin/')
         
         user = authenticate(username =username,password =password)
         
-        if User is None:
+        if user is None:
             messages.info(request, 'invalid password')
             return redirect('/signin/')
         else:
@@ -158,12 +164,12 @@ def signup(request):
         business.save()
 
         login(request ,user)
-        return redirect('dashboard')
+        return redirect('/dashboard/')
     context = {"page":"home"}
     return render(request,'signup.html',context)
 
 @login_required(login_url="/signin/")
-def signout(request):
+def Signout(request):
     logout(request)
     return redirect('/signup/')
 

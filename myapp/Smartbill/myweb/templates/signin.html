@@ -47,14 +47,14 @@
       <div class="mb-3">
         <label class="form-label" for="username">Username</label>
         <input type="text" class="form-control" id="username"
-               placeholder="Enter your username" autocomplete="username"/>
+               placeholder="Enter your username" name="username" autocomplete="username"/>
       </div>
 
       <div class="mb-3">
         <label class="form-label" for="password">Password</label>
         <div class="pw-wrap">
           <input type="password" class="form-control" id="password"
-                 placeholder="Enter your password" autocomplete="current-password"/>
+                 placeholder="Enter your password" name="password" autocomplete="current-password"/>
           <!-- Show / hide password button -->
           <button type="button" class="pw-toggle" onclick="togglePw()">
             <i class="bi bi-eye" id="eye-icon"></i>
@@ -67,7 +67,7 @@
           <input class="form-check-input" type="checkbox" id="rememberMe"/>
           <label class="form-check-label small" for="rememberMe">Remember me</label>
         </div>
-        <a href="{% url 'forget_password' %}" class="small text-primary text-decoration-none">Forgot password?</a>
+        <a href="{% url 'signup' %}" class="small text-primary text-decoration-none">Forgot password?</a>
       </div>
 
       <button type="submit" class="btn btn-primary btn-login">
@@ -99,21 +99,6 @@
     inp.type   = inp.type === 'password' ? 'text' : 'password';
     icon.className = inp.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';
   }
-
-  // Simple validation — stops empty form from submitting
-  document.getElementById('login-form').addEventListener('submit', function(e) {
-    const user = document.getElementById('username').value.trim();
-    const pass = document.getElementById('password').value.trim();
-    const box  = document.getElementById('error-alert');
-    if (!user || !pass) {
-      e.preventDefault();
-      document.getElementById('error-msg').textContent = 'Please fill in both fields.';
-      box.style.display = 'block';
-    } else {
-      box.style.display = 'none';
-      // form proceeds to action="{% url 'dashboard' %}"
-    }
-  });
 </script>
 </body>
 </html>
