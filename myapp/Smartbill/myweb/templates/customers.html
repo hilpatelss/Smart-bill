@@ -30,7 +30,7 @@
       <a href="{% url 'products' %}" class="nav-link-item"><i class="bi bi-box-seam"></i> Products</a>
       <a href="{% url 'customers' %}" class="nav-link-item active"><i class="bi bi-people"></i> Customers</a>
       <div class="nav-label mt-2">Business</div>
-      <a href="{% url 'reports' %}" class="nav-link-item"><i class="bi bi-bar-chart-line"></i> Reports</a>
+      <!-- <a href="{% url 'reports' %}" class="nav-link-item"><i class="bi bi-bar-chart-line"></i> Reports</a> -->
       <a href="{% url 'settings' %}" class="nav-link-item"><i class="bi bi-gear"></i> Settings</a>
     </nav>
     <div class="sidebar-footer"><a href="{% url 'signin' %}"><i class="bi bi-box-arrow-left"></i> Logout</a></div>
@@ -74,7 +74,7 @@
         </div>
       </div>
     </div>
-
+    
     <!-- Customer list -->
     <div class="panel">
       <div class="panel-header justify-content-between">
@@ -104,7 +104,7 @@
               <td>{{ forloop.counter }}</td>
               <td>
                 <div class="d-flex align-items-center gap-2">
-                    <div class="avatar-sm">{{ c.initials }}  </div>
+                  <div class="avatar-sm">{{ c.initials }} </div>
                   <strong>{{ c.Customer_name}}</strong>
                 </div>
               </td>
@@ -114,12 +114,13 @@
               <td><strong>₹ {{c.customer_bill_spent}}</strong></td>
               <td class="d-flex justify-content-start">
                 <button class="btn btn-sm btn-outline-primary py-0 me-1" data-bs-toggle="modal"
-                data-bs-target="#editCustModal" onclick="fillEdit('{{ c.Customer_name}}','{{ c.Customer_mobile }}','{{ c.Customer_email }}')">
-                <i class="bi bi-pencil"></i>
-              </button>
-              <form id="deletecustomer">
-                {% csrf_token %}
-                  <button type="submit" id="deletecustomer_Customer_mobile" name="" value="{{ c.Customer_mobile }}"
+                  data-bs-target="#editCustModal"
+                  onclick="fillEdit('{{ c.Customer_name}}','{{ c.Customer_mobile }}','{{ c.Customer_email }}')">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <form id="deletecustomer">
+                  {% csrf_token %}
+                  <button type="submit" id="deletecustomer_Customer_id" name="Customer_id" value="{{ c.id }}"
                     class="btn btn-sm btn-outline-danger py-0">
                     <i class="bi bi-trash3"></i>
                   </button>
@@ -129,7 +130,7 @@
             </tr>
             {% endfor %}
           </tbody>
-          
+
         </table>
       </div>
     </div>
@@ -143,7 +144,7 @@
         type: 'POST',
         url: '/deletecustomer/',
         data: {
-          Customer_mobile: $('#deletecustomer_Customer_mobile').val(),
+          Customer_id: $('#deletecustomer_Customer_id').val(),
           csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
         },
         success: function (data) {
@@ -165,7 +166,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body">
-            <form id="addCustForm">
+            
               <div class="mb-3">
                 <label class="form-label">Full Name *</label>
                 <input type="text" id="addcustomer_Customer_name" name="Customer_name" class="form-control"
@@ -181,7 +182,7 @@
                 <input type="email" id="addcustomer_Customer_email" name="Customer_email" class="form-control"
                   id="newCustEmail" placeholder="optional" />
               </div>
-            </form>
+          
           </div>
           <div class="modal-footer">
             <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -260,9 +261,9 @@
           csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
         },
         success: function (data) {
-           bootstrap.Modal.getInstance(document.getElementById('editCustModal')).hide();
+          bootstrap.Modal.getInstance(document.getElementById('editCustModal')).hide();
           location.reload(true);
-           // Handle success response
+          // Handle success response
         }
       })
     })

@@ -34,7 +34,7 @@
       <a href="{% url 'products' %}" class="nav-link-item"><i class="bi bi-box-seam"></i> Products</a>
       <a href="{% url 'customers' %}" class="nav-link-item "><i class="bi bi-people"></i> Customers</a>
       <div class="nav-label mt-2">Business</div>
-      <a href="{% url 'reports' %}" class="nav-link-item"><i class="bi bi-bar-chart-line"></i> Reports</a>
+      <!-- <a href="{% url 'reports' %}" class="nav-link-item"><i class="bi bi-bar-chart-line"></i> Reports</a> -->
       <a href="{% url 'settings' %}" class="nav-link-item"><i class="bi bi-gear"></i> Settings</a>
     </nav>
     <div class="sidebar-footer"><a href="{% url 'signin' %}"><i class="bi bi-box-arrow-left"></i> Logout</a></div>
@@ -59,19 +59,20 @@
         <div>
           <!-- Shows the auto-generated invoice number -->
           <span class="badge bg-light text-dark border fs-6" id="invoice-num">
-            #INV-0042
+            {{data.inv_format}}
+            {{ data.inv_number}}
           </span>
         </div>
       </div>
 
 
       <!-- ─────────────────────────────────────────
-       PANEL 1: CUSTOMER SELECTION
+       PANEL 1: CUSTOMER 
        ───────────────────────────────────────── -->
       <div class="panel">
         <div class="panel-header">
           <i class="bi bi-person-circle text-primary"></i>
-          Step 1 — Select Customer
+          Step 1 — Enter Customer Details
         </div>
         <div class="panel-body">
           <div class="row g-3">
@@ -80,43 +81,46 @@
             <!-- Auto phone -->
             <div class="col-md-4">
               <label class="form-label">Phone</label>
-              <input type="text" class="form-control" id="custPhone" placeholder="9265186613" />
+              <input type="text" class="form-control" id="custPhone" name="Customer_number" placeholder="9265186613"
+                required />
             </div>
 
             <!-- Customer Name -->
             <div class="col-md-4">
-              <label class="form-label" for="customerSelect">Customer Name</label>
-              <input type="text" class="form-control" id="custName" placeholder="Hil Patel" />
-              </select>
+              <label class="form-label">Customer Name</label>
+              <input type="text" class="form-control" id="custName" name="Customer_name" placeholder="Hil Patel" />
             </div>
             <!-- Notes -->
             <div class="col-md-4">
               <label class="form-label">Notes <span class="text-muted">(optional)</span></label>
-              <input type="text" class="form-control" placeholder="e.g. Prepaid order" />
+              <input type="text" class="form-control" name="notes" placeholder="e.g. Prepaid order" />
             </div>
 
 
             <!-- Bill date -->
             <div class="col-md-4">
               <label class="form-label">Bill Date</label>
-              <input type="date" class="form-control" id="billDate" />
+              <input type="date" class="form-control" value="{% if data.today %}{{data.today|date:'Y-m-d'}}{% endif %}"
+                name="Inv_bill_date" id="billDate" />
             </div>
 
             <!-- Due date -->
             <div class="col-md-4">
               <label class="form-label">Due Date <span class="text-muted">(optional)</span></label>
-              <input type="date" class="form-control" id="dueDate" />
+              <input type="date" class="form-control"
+                value="{% if data.due_date %}{{data.due_date|date:'Y-m-d'}}{% endif %}" name="Inv_due_bill_date"
+                id="dueDate" />
             </div>
 
             <!-- Payment method -->
             <div class="col-md-4">
               <label class="form-label">Payment Method</label>
-              <select class="form-select" id="payMethod">
-                <option>Cash</option>
-                <option>UPI</option>
-                <option>Card</option>
-                <option>Bank Transfer</option>
-                <option>Credit</option>
+              <select class="form-select" name="Inv_payment_mode" id="payMethod">
+                <option value="cash">Cash</option>
+                <option value="upi">UPI</option>
+                <option value="card">Card</option>
+                <option value="bank_transfer">Bank Transfer</option>
+                <option value="credit">Credit</option>
               </select>
             </div>
 
@@ -127,7 +131,7 @@
 
       <!-- ─────────────────────────────────────────
        PANEL 2: PRODUCTS TABLE
-  ───────────────────────────────────────── -->
+     ───────────────────────────────────────── -->
       <div class="panel">
         <div class="panel-header">
           <i class="bi bi-box-seam text-success"></i>
@@ -173,38 +177,26 @@
        PANEL 3: SUMMARY + GENERATE BUTTON
        Two column layout: left = discount/notes,
        right = totals summary.
-  ───────────────────────────────────────── -->
+      ───────────────────────────────────────── -->
       <div class="row g-3">
 
         <!-- Left: discount field -->
         <div class="col-md-6">
-          <div class="panel h-100">
+          <div class="panel ">
             <div class="panel-header">
               <i class="bi bi-tag text-warning"></i>
               Additional Options
             </div>
             <div class="panel-body">
-
               <div class="mb-3">
                 <label class="form-label">Discount (%)</label>
-                <!--
-              When the user types a discount, the recalculate() function
-              updates the summary section automatically.
-            -->
                 <input type="number" class="form-control" id="discountPct" value="0" min="0" max="100"
                   oninput="recalculate()" />
               </div>
-
               <div class="mb-3">
                 <label class="form-label">Additional Charges (₹)</label>
                 <input type="number" class="form-control" id="extraCharges" value="0" min="0" oninput="recalculate()" />
               </div>
-
-              <div>
-                <label class="form-label">Internal Notes</label>
-                <textarea class="form-control" rows="3" placeholder="Visible on invoice..."></textarea>
-              </div>
-
             </div>
           </div>
         </div>
@@ -221,7 +213,6 @@
               <div class="summary-box">
                 <div class="summary-row">
                   <span class="summary-label">Subtotal</span>
-                  <!-- These spans are updated by recalculate() JS -->
                   <span id="disp-subtotal">₹ 0.00</span>
                 </div>
                 <div class="summary-row">
@@ -242,26 +233,28 @@
                 </div>
               </div>
 
+                <!-- Hidden inputs to send values to server -->
+                <input type="text" hidden id="hidden-subtotal" name="Inv_subtotal" value="" />
+                <input type="text" hidden id="hidden-gst" name="Inv_gst" value="" />
+                <input type="text" hidden id="hidden-discount" name="Inv_discount" value="" />
+                <input type="text" hidden id="hidden-extra" name="Inv_additional_charges" value="" />
+                <input type="text" hidden id="hidden-total" name="Inv_Total" value="" />
+
+
               <!-- Generate Bill button -->
               <div class="mt-3">
-                <button class="btn btn-success btn-generate" onclick="generateBill()">
+                <button type="submit" class="btn btn-success btn-generate" onclick="generateBill()">
                   <i class="bi bi-check-circle me-2"></i> Generate Bill
                 </button>
               </div>
 
-              <!-- Save as draft option -->
-              <div class="mt-2 text-center">
-                <button class="btn btn-link btn-sm text-muted">
-                  <i class="bi bi-floppy me-1"></i> Save as Draft
-                </button>
-              </div>
 
             </div>
           </div>
         </div>
 
       </div><!-- /summary row -->
-
+    </form>
   </main>
 
   <script type="text/javascript">
@@ -294,8 +287,9 @@
     //   In production, this list comes from your backend/API.
     //   Here it's a simple array of objects.
     const PRODUCTS = [
-      { code: "P001", name: "Rice (5kg)", price: 320, gst: 5 },
-
+    {% for p in data.products %}
+    { code: "{{ p.id }}", name: "{{ p.Product_name }}", price: {{ p.Product_price }}, gst: {{ p.Product_gst }} },
+    {% endfor %}
     ];
 
     // ── 2. Row counter (gives each row a unique ID) ─────────
@@ -309,7 +303,7 @@
       // Build the dropdown <option> list from PRODUCTS array
       let options = '<option value="">-- Select Product --</option>';
       PRODUCTS.forEach(p => {
-        options += `<option value="${p.code}"
+        options += `<option value="${p.name}"
             data-price="${p.price}"
             data-gst="${p.gst}">
             ${p.name}
@@ -322,7 +316,7 @@
       <td>
       <!-- Product dropdown -->
       <select class="form-select form-select-sm"
-          id="prod-${id}"
+          id="prod-${id}" name="Product_name"
           onchange="onProductChange(${id})">
         ${options}
       </select>
@@ -330,19 +324,19 @@
       <td>
       <!-- Unit price — auto-filled when product selected -->
       <input type="number" class="form-control form-control-sm"
-           id="price-${id}" value="0" readonly
+           id="price-${id}" name="Product_price" value="" readonly
            style="background:#f8fafc;"/>
       </td>
       <td>
       <!-- GST % — auto-filled -->
       <input type="number" class="form-control form-control-sm"
-           id="gst-${id}" value="0" readonly
+           id="gst-${id}" name="Product_gst" value="" readonly
            style="background:#f8fafc;"/>
       </td>
       <td>
       <!-- Quantity — user types here; triggers recalculation -->
       <input type="number" class="form-control form-control-sm"
-           id="qty-${id}" value="1" min="1"
+           id="qty-${id}" name="Product_qty" value="1" min="1"
            oninput="updateRowTotal(${id}); recalculate()"/>
       </td>
       <td class="total-cell">
@@ -425,46 +419,19 @@
 
       // Push values into the summary display spans
       $('#disp-subtotal').text('₹ ' + subtotal.toFixed(2));
+      $('#hidden-subtotal').val(subtotal.toFixed(2));
       $('#disp-gst').text('₹ ' + totalGst.toFixed(2));
+      $('#hidden-gst').val(totalGst.toFixed(2));
       $('#disp-discount').text('- ₹ ' + discountAmt.toFixed(2));
+      $('#hidden-discount').val(discountAmt.toFixed(2));
       $('#disp-extra').text('+ ₹ ' + extra.toFixed(2));
+      $('#hidden-extra').val(extra.toFixed(2));
       $('#disp-total').text('₹ ' + total.toFixed(2));
+      $('#hidden-total').val(total.toFixed(2));
     }
 
-    // ── 8. generateBill() — basic validation then redirect ──
-    function generateBill() {
-      const customer = $('#customerSelect').val();
-      const rows = $('#product-rows').children();
 
-      // Simple validation
-      if (!customer) {
-        alert('⚠️ Please select a customer before generating the bill.');
-        return;
-      }
-      if (rows.length === 0) {
-        alert('⚠️ Please add at least one product.');
-        return;
-      }
 
-      // In a real app, POST data to server here.
-      // For demo, just redirect to the invoice view page.
-      alert('✅ Bill generated! Redirecting to invoice...');
-      window.location.href = 'invoice.html';
-    }
-
-    // ── 10. Page load setup ─────────────────────────────────
-    $(document).ready(function () {
-      // Set today's date as default bill date
-      const today = new Date().toISOString().split('T')[0];
-      $('#billDate').val(today);
-
-      // Auto-generate a demo invoice number
-      const num = Math.floor(Math.random() * 900) + 100;
-      $('#invoice-num').text('#INV-0' + num);
-
-      // Add one empty product row on load so the page isn't blank
-      addRow();
-    });
   </script>
 
 </body>

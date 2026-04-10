@@ -42,17 +42,18 @@ class Products(models.Model):
 class Invoice(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     Inv_number = models.IntegerField()
-    Inv_Total = models.IntegerField()
-    Inv_gst = models.IntegerField()
-    Inv_discount = models.IntegerField()
-    Inv_additional_charges = models.IntegerField()
-    Inv_internal_notes = models.IntegerField()
+    Inv_Total = models.FloatField()
+    Inv_subtotal = models.FloatField()
+    Inv_gst = models.FloatField()
+    Inv_discount = models.FloatField()
+    Inv_additional_charges = models.FloatField()
+    Inv_internal_notes = models.TextField()
     Inv_bill_date = models.DateField()
     Inv_due_bill_date = models.DateField()
     Inv_payment_mode = models.CharField()
     Customer_number = models.IntegerField()
     def __str__(self):
-        return self.Inv_number
+        return self.user.username + " - " + str(self.Inv_number)
 
 class Sells(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)

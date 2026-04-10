@@ -1,3 +1,7 @@
+from datetime import datetime, timedelta
+from time import strftime
+from django.contrib.auth.models import User
+from datetime import date, timedelta
 from django.shortcuts import render, redirect ,reverse
 from django.contrib import messages
 from django.http import HttpResponse
@@ -7,6 +11,7 @@ from django.contrib.auth import authenticate ,login ,logout
 from django.http import JsonResponse
 from django.contrib import messages
 from myweb.models import *
+from django.db.models import Sum
 
 def home(request):
     context = {"page":"home"}
@@ -18,7 +23,83 @@ def about(request):
 
 @login_required(login_url="/signin/")
 def billing(request):
-    context = {"page":"home"}
+    inv = Invoice.objects.filter(user = request.user).order_by('-id').first()
+    inv_number = int(inv.Inv_number) + 1 if inv else 1
+    today = date.today()
+    due_date = today + timedelta(int(Formet.objects.filter(user = request.user).first().Inv_due_days))  # Example: due date is 30 days from today
+    inv_format = Formet.objects.filter(user = request.user).first().Inv_prefix
+    products = Products.objects.filter(user = request.user)
+    data = {
+        "inv_number": inv_number,
+        "today":today ,
+        "due_date":due_date,
+        "inv_format": inv_format,
+        "products": products
+    }
+    if request.method == "POST":
+        Customer_mobile = request.POST.get("Customer_number")
+        Customer_name = request.POST.get("Customer_name")
+        notes = request.POST.get("notes")
+        Inv_bill_date = request.POST.get("Inv_bill_date")
+        Inv_due_bill_date= request.POST.get("Inv_due_bill_date")
+        Inv_payment_mode = request.POST.get("Inv_payment_mode")
+        Product_name = request.POST.getlist("Product_name")
+        Product_price = [int(x) for x in request.POST.getlist("Product_price")]
+        Product_gst = [float(x) for x in request.POST.getlist("Product_gst")]
+        Product_qty = [int(x) for x in request.POST.getlist("Product_qty")]
+        Inv_subtotal = float(request.POST.get("Inv_subtotal", 0))
+        Inv_gst = float(request.POST.get("Inv_gst", 0))
+        Inv_Total = float(request.POST.get("Inv_Total", 0))
+        Inv_additional_charges = float(request.POST.get("Inv_additional_charges", 0))
+        Inv_discount = float(request.POST.get("Inv_discount", 0))
+
+        if not Customer.objects.filter(user=request.user).filter(Customer_mobile = Customer_mobile).exists():
+            # Create new customer
+            customer = Customer.objects.create(
+            user=request.user,
+            Customer_name=Customer_name,
+            Customer_mobile=Customer_mobile
+            )
+            customer.save()
+        else:
+            # Update existing customer's name if different
+            customer = Customer.objects.filter(user=request.user).filter(Customer_mobile = Customer_mobile).first()
+            if customer.Customer_name != Customer_name:
+                customer.Customer_name = Customer_name
+                customer.save()
+        invoice = Invoice.objects.create(
+            user = request.user,
+            Inv_number = inv_number,
+            Inv_Total = Inv_Total,
+            Inv_subtotal = Inv_subtotal,
+            Inv_gst = Inv_gst,
+            Inv_discount = Inv_discount,
+            Inv_additional_charges = Inv_additional_charges,
+            Inv_internal_notes = notes,
+            Inv_bill_date = date.strptime(Inv_bill_date, '%Y-%m-%d'),
+            Inv_due_bill_date = date.strptime(Inv_due_bill_date, '%Y-%m-%d'),
+            Inv_payment_mode = Inv_payment_mode,
+            Customer_number = Customer_mobile
+        )
+        invoice.save()  
+        print(Product_name,Product_price,Product_gst,Product_qty)
+        if len(Product_name) > 0:
+            for i in range(len(Product_name)):
+                if i < len(Product_price) and i < len(Product_gst) and i < len(Product_qty):
+                    sell = Sells.objects.create(
+                        user = request.user,
+                        Inv_number = Invoice.objects.filter(user = request.user).filter(Inv_number = inv_number).first(),
+                        Product_name = Product_name[i],
+                        Product_qty = Product_qty[i],
+                        Product_price = Product_price[i],
+                        Product_gst = Product_gst[i]
+                    )
+                    sell.save()
+        inv_id = Invoice.objects.filter(user = request.user).filter(Inv_number = inv_number).first().id
+        return redirect('invoice', inv_id= inv_id)
+
+
+    context = {"page":"home", "data": data}
     return render(request,'billing.html',context)
 
 @csrf_protect
@@ -27,8 +108,9 @@ def getcustomer(request):
     if request.method == "POST":
         Customer_mobile = request.POST.get("Customer_mobile")
         print(Customer_mobile)
-        if Customer_mobile == '9265186613' :   
-            success = "Hilu patel"
+        customer_name = Customer.objects.filter(user=request.user).filter(Customer_mobile = Customer_mobile).first().Customer_name
+        if customer_name:   
+            success = customer_name.title() 
         else:
             success = "Customer not found"
         return HttpResponse(success)
@@ -40,8 +122,8 @@ def dashboard(request):
 
 @login_required(login_url="/signin/")   
 def customers(request):
-    user = request.user
-    Cust  = Customer.objects.filter(user=user)
+    user = request.user   
+    Cust  = Customer.objects.filter(user=user).order_by('-id')
     cust_total = Cust.count()
     cust_revenue = 0
     cust_bills = 0
@@ -75,8 +157,7 @@ def editcustomer(request):
         cust.save()
         print(Customer_name,Customer_mobile,Customer_email)
         return redirect('/customers/')
-    
-    
+        
 @csrf_protect
 @login_required(login_url="/signin/")   
 def addcustomer(request):
@@ -99,18 +180,48 @@ def addcustomer(request):
 def deletecustomer(request):
     if request.method == "POST":
         User = request.user
-        Customer_mobile = request.POST.get("Customer_mobile")
-        cust = Customer.objects.filter(user=User).filter(Customer_mobile = Customer_mobile).first()
+        Customer_id = request.POST.get("Customer_id")
+
+        cust = Customer.objects.filter(user=User).filter(id = Customer_id).first()
         if cust:
             cust.delete()
 
-        print(Customer_mobile)
         return redirect('/customers/')
     return redirect('/customers/')
  
 @login_required(login_url="/signin/")
-def invoice(request):
-    context = {"page":"home"}
+def invoice(request, inv_id):
+    user = request.user
+    inv = Invoice.objects.filter(user = request.user).filter(id = inv_id).first()
+    print(inv.Inv_number)
+    formet = Formet.objects.filter(user = user).first()
+    business = Business.objects.filter(user = user).first()
+    customer = Customer.objects.filter(user=user).filter(Customer_mobile = inv.Customer_number).first()
+    sells = Sells.objects.filter(user=user).filter(Inv_number = inv)
+    for item in sells:
+        item.Total = item.Product_price * item.Product_qty * (1 + (item.Product_gst ) / 100) if item.Product_gst != 0 else item.Product_price * item.Product_qty
+    data = {
+        "Shop_name": business.bizName if business else "",
+        "Shop_address": business.full_address if business else "",
+        "Shop_phone": business.phone_number if business else "",
+        "Shop_Gstin": business.Gstin if business else "",
+        "Inv_format": formet.Inv_prefix if formet else "",
+        "Inv_number": inv.Inv_number,
+        "Inv_status": "Paid" if inv.Inv_due_bill_date <= date.today() else "Pending",
+        "Inv_date": inv.Inv_bill_date,
+        "Inv_due_date": inv.Inv_due_bill_date,
+        "Inv_payment_method": inv.Inv_payment_mode,
+        "Inv_payment_status": inv.Inv_due_bill_date <= date.today() and "Paid" or "Pending",
+        "Inv_subtotal": inv.Inv_subtotal,
+        "Inv_gst": inv.Inv_gst,
+        "Inv_discount": inv.Inv_discount,
+        "Inv_total": inv.Inv_Total,
+        "Customer_name": customer.Customer_name if customer else "",
+        "Customer_mobile": customer.Customer_mobile if customer else "",
+        "Customer_email": customer.Customer_email if customer else "",
+        "sells": sells
+    }
+    context = {"page":"home", "data": data}
     return render(request,'invoice.html',context)
 
 @login_required(login_url="/signin/")
@@ -194,16 +305,84 @@ def deleteproducts(request):
 
 @login_required(login_url="/signin/")
 def reports(request):
-    context = {"page":"home"}
+    User = request.user
+    invoices = Invoice.objects.filter(user=User)
+    total_revenue = sum(inv.Inv_Total for inv in invoices)
+    invoices_generated = invoices.count()
+    avg_order_value = total_revenue / invoices_generated if invoices_generated > 0 else 0
+    total_gst_collected = sum(inv.Inv_GST for inv in invoices)
+    invoices = invoices.order_by('-Inv_bill_date')[:5]
+    sun = 0  
+    mon = 0     
+    tue = 0 
+    wed = 0
+    thu = 0
+    fri = 0
+    sat = 0
+    for inv in invoices:
+        if inv.Inv_bill_date.weekday() == 6:
+            sun += inv.Inv_Total
+        elif inv.Inv_bill_date.weekday() == 0:
+            mon += inv.Inv_Total
+        elif inv.Inv_bill_date.weekday() == 1:
+            tue += inv.Inv_Total
+        elif inv.Inv_bill_date.weekday() == 2:
+            wed += inv.Inv_Total
+        elif inv.Inv_bill_date.weekday() == 3:
+            thu += inv.Inv_Total
+        elif inv.Inv_bill_date.weekday() == 4:
+            fri += inv.Inv_Total
+        elif inv.Inv_bill_date.weekday() == 5:
+            sat += inv.Inv_Total
+    revenue = (max([sun, mon, tue, wed, thu, fri, sat]))
+    sun_height = f'{(sun / revenue) * 130 if revenue > 0 else 0 }px'
+    mon_height = f'{(mon / revenue) * 130 if revenue > 0 else 0 }px'
+    tue_height = f'{(tue / revenue) * 130 if revenue > 0 else 0 }px'
+    wed_height = f'{(wed / revenue) * 130 if revenue > 0 else 0 }px'
+    thu_height = f'{(thu / revenue) * 130 if revenue > 0 else 0 }px'
+    fri_height = f'{(fri / revenue) * 130 if revenue > 0 else 0 }px'
+    sat_height = f'{(sat / revenue) * 130 if revenue > 0 else 0 }px'  
+
+    top = {}
+    sells = Sells.objects.filter(user=User).annotate(total_qty=Sum('product_qty')).order_by('product_name')
+    for sell in sells:
+        top[sell.name] = sell.total_qty * sell.Product_price * (1 + (sell.Product_gst / 100))
+    top = dict(sorted(top.items(), key=lambda item: item[1], reverse=True)[:5])
+    top_1_h = top[list(top.keys())[0]] / sum(top.values()) * 100 if sum(top.values()) > 0 else 0
+    top_2_h = top[list(top.keys())[1]] / sum(top.values()) * 100 if sum(top.values()) > 0 else 0
+    top_3_h = top[list(top.keys())[2]] / sum(top.values()) * 100 if sum(top.values()) > 0 else 0
+    top_4_h = top[list(top.keys())[3]] / sum(top.values()) * 100 if sum(top.values()) > 0 else 0
+    top_5_h = top[list(top.keys())[4]] / sum(top.values()) * 100 if sum(top.values()) > 0 else 0    
+
+    data =  { "total_revenue": total_revenue, "invoices_generated": invoices_generated,"avg_order_value": avg_order_value,"total_gst_collected": total_gst_collected,"sun": sun,"mon": mon,"tue": tue,"wed": wed,"thu": thu,"fri": fri,"sat": sat,"sun_height": sun_height,"mon_height": mon_height,"tue_height": tue_height,"wed_height": wed_height,"thu_height": thu_height,"fri_height": fri_height,"sat_height": sat_height ,"top": top,"top_1_h": top_1_h,"top_2_h": top_2_h,"top_3_h": top_3_h,"top_4_h": top_4_h,"top_5_h": top_5_h }
+    context = {"page":"home", "data": data}
     return render(request,'reports.html',context)
 
 @login_required(login_url="/signin/")
 def sales_history(request):
-    context = {"page":"home"}
+    user = request.user
+    inv = Invoice.objects.filter(user =user)
+    total_coll = inv.filter(Inv_due_bill_date= date.today()).aggregate(total=Sum('Inv_Total'))['total'] or 0
+    total_pen = inv.filter(Inv_due_bill_date__lte = date.today()).aggregate(total=Sum('Inv_Total'))['total'] or 0
+    total_T_rev = inv.filter(Inv_due_bill_date__gte = date.today()).aggregate(total=Sum('Inv_Total'))['total'] or 0
+    invoice = inv.order_by('-Inv_bill_date')
+    formet = Formet.objects.filter(user = user).first()
+    for i in invoice:    
+            i.Inv_status = "Paid" if i.Inv_due_bill_date <= date.today() else "Pending"
+            i.Customer_name = Customer.objects.filter(user=user).filter(Customer_mobile = i.Customer_number).first().Customer_name
+    data = {
+        "inv" : invoice,
+        "total_inv": inv.count(),
+        "total_coll": total_coll,
+        "total_pen": total_pen,
+        "total_T_rev": total_T_rev,
+        "Formet": formet
+    }
+    context = {"page":"home","data": data}
     return render(request,'sales_history.html',context)
 
 @login_required(login_url="/signin/")
-def settings(request):
+def settings(request): 
     user = request.user
     biz = Business.objects.filter(user = user).first()
     format = Formet.objects.filter(user = user).first()

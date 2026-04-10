@@ -25,7 +25,7 @@
     <a href="{% url 'products' %}"  class="nav-link-item"><i class="bi bi-box-seam"></i> Products</a>
     <a href="{% url 'customers' %}" class="nav-link-item"><i class="bi bi-people"></i> Customers</a>
     <div class="nav-label mt-2">Business</div>
-    <a href="{% url 'reports' %}"   class="nav-link-item"><i class="bi bi-bar-chart-line"></i> Reports</a>
+    <!-- <a href="{% url 'reports' %}"   class="nav-link-item"><i class="bi bi-bar-chart-line"></i> Reports</a> -->
     <a href="{% url 'settings' %}"  class="nav-link-item"><i class="bi bi-gear"></i> Settings</a>
   </nav>
   <div class="sidebar-footer"><a href="{% url 'signin' %}"><i class="bi bi-box-arrow-left"></i> Logout</a></div>
@@ -51,25 +51,25 @@
   <div class="row g-3 mb-4">
     <div class="col-6 col-md-3">
       <div class="panel mb-0 p-3 text-center">
-        <div class="fs-4 fw-bold">41</div>
+        <div class="fs-4 fw-bold">{{ data.total_inv }}</div>
         <div class="small text-muted">Total Invoices</div>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="panel mb-0 p-3 text-center">
-        <div class="fs-4 fw-bold text-success">₹ 1,24,200</div>
+        <div class="fs-4 fw-bold text-success">₹ {{ data.total_coll }}</div>
         <div class="small text-muted">Total Collected</div>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="panel mb-0 p-3 text-center">
-        <div class="fs-4 fw-bold text-warning">₹ 8,400</div>
+        <div class="fs-4 fw-bold text-warning">₹ {{ data.total_pen }}</div>
         <div class="small text-muted">Pending Payments</div>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="panel mb-0 p-3 text-center">
-        <div class="fs-4 fw-bold text-primary">₹ 3,050</div>
+        <div class="fs-4 fw-bold text-primary">₹ {{ data.total_T_rev }}</div>
         <div class="small text-muted">Today's Revenue</div>
       </div>
     </div>
@@ -151,55 +151,24 @@
             data-status & data-date are used by the JS filter below.
             In production, Django renders these rows with template tags.
           -->
-          <tr data-status="Paid" data-date="2025-07-22" data-customer="rahul sharma">
-            <td><strong>#INV-0042</strong></td><td>Rahul Sharma</td><td>3</td>
-            <td>₹ 1,085</td><td>₹ 155</td><td><strong>₹ 1,240</strong></td>
-            <td>22 Jul 2025</td><td>UPI</td>
-            <td><span class="badge-paid">Paid</span></td>
-            <td><a href="{% url 'invoice' %}" class="btn btn-sm btn-outline-primary py-0">View</a></td>
+
+          {% for i in data.inv %}
+          <tr data-status="{{ i.Inv_status }}" data-date="{{ i.Inv_bill_date|date:'Y-m-d' }}" data-customer="{{ i.Customer_name }}">
+            <td><strong>{{ data.Formet.Inv_prefix }}{{ i.Inv_number }}</strong></td>
+            <td>{{ i.Customer_name }}</td>
+            <td>{{ i.Inv_items }}</td>
+            <td>₹ {{ i.Inv_subtotal|floatformat:2 }}</td>
+            <td>₹ {{ i.Inv_gst|floatformat:2 }}</td>
+            <td><strong>₹ {{ i.Inv_total|floatformat:2 }}</strong></td>
+            <td>{{ i.Inv_bill_date|date:'d M Y' }}</td>
+            <td>{{ i.Inv_payment_method }}</td>
+            <td><span class="badge-{{ i.Inv_status|lower }}">{{ i.Inv_status }}</span></td>
+            <form action="{% url 'invoice' %}" method="post">
+              {% csrf_token %}
+              <td><button type="submit" value="{{ i.Inv_number }}" name="inv_number" class="btn btn-sm btn-outline-primary py-0">View</button> </td>
+            </form>
           </tr>
-          <tr data-status="Paid" data-date="2025-07-22" data-customer="priya mehta">
-            <td><strong>#INV-0041</strong></td><td>Priya Mehta</td><td>1</td>
-            <td>₹ 552</td><td>₹ 28</td><td><strong>₹ 580</strong></td>
-            <td>22 Jul 2025</td><td>Cash</td>
-            <td><span class="badge-paid">Paid</span></td>
-            <td><a href="{% url 'invoice' %}" class="btn btn-sm btn-outline-primary py-0">View</a></td>
-          </tr>
-          <tr data-status="Pending" data-date="2025-07-21" data-customer="amit patel">
-            <td><strong>#INV-0040</strong></td><td>Amit Patel</td><td>5</td>
-            <td>₹ 2,585</td><td>₹ 465</td><td><strong>₹ 3,050</strong></td>
-            <td>21 Jul 2025</td><td>Credit</td>
-            <td><span class="badge-pending">Pending</span></td>
-            <td><a href="{% url 'invoice' %}" class="btn btn-sm btn-outline-primary py-0">View</a></td>
-          </tr>
-          <tr data-status="Paid" data-date="2025-07-21" data-customer="sneha joshi">
-            <td><strong>#INV-0039</strong></td><td>Sneha Joshi</td><td>2</td>
-            <td>₹ 800</td><td>₹ 90</td><td><strong>₹ 890</strong></td>
-            <td>21 Jul 2025</td><td>UPI</td>
-            <td><span class="badge-paid">Paid</span></td>
-            <td><a href="{% url 'invoice' %}" class="btn btn-sm btn-outline-primary py-0">View</a></td>
-          </tr>
-          <tr data-status="Draft" data-date="2025-07-20" data-customer="vikram singh">
-            <td><strong>#INV-0038</strong></td><td>Vikram Singh</td><td>4</td>
-            <td>₹ 1,800</td><td>₹ 300</td><td><strong>₹ 2,100</strong></td>
-            <td>20 Jul 2025</td><td>—</td>
-            <td><span class="badge-draft">Draft</span></td>
-            <td><a href="{% url 'invoice' %}" class="btn btn-sm btn-outline-primary py-0">View</a></td>
-          </tr>
-          <tr data-status="Paid" data-date="2025-07-20" data-customer="rahul sharma">
-            <td><strong>#INV-0037</strong></td><td>Rahul Sharma</td><td>2</td>
-            <td>₹ 2,950</td><td>₹ 150</td><td><strong>₹ 3,100</strong></td>
-            <td>20 Jul 2025</td><td>Card</td>
-            <td><span class="badge-paid">Paid</span></td>
-            <td><a href="{% url 'invoice' %}" class="btn btn-sm btn-outline-primary py-0">View</a></td>
-          </tr>
-          <tr data-status="Pending" data-date="2025-07-18" data-customer="priya mehta">
-            <td><strong>#INV-0036</strong></td><td>Priya Mehta</td><td>3</td>
-            <td>₹ 1,280</td><td>₹ 170</td><td><strong>₹ 1,450</strong></td>
-            <td>18 Jul 2025</td><td>Credit</td>
-            <td><span class="badge-pending">Pending</span></td>
-            <td><a href="{% url 'invoice' %}" class="btn btn-sm btn-outline-primary py-0">View</a></td>
-          </tr>
+          {% endfor %}
         </tbody>
       </table>
     </div>
