@@ -7,10 +7,11 @@ urlpatterns = [
     path('billing/', views.billing, name='billing'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('invoice/<int:inv_id>/', views.invoice, name='invoice'),
+    path('invoice_h/', views.invoice_h, name='invoice_h'),
     path('products/', views.products, name='products'),
     path('reports/', views.reports, name='reports'),
-    path('sales_history/', views.sales_history, name='sales_history'),
     path('settings/', views.settings, name='settings'),
+    path('sales_history/', views.sales_history, name='sales_history'),
     path('signin/', views.signin, name='signin'),
     path('signup/', views.signup, name='signup'),
     path('Signout/' , views.Signout , name="Signout"),
@@ -26,4 +27,5 @@ urlpatterns = [
     path('addproducts/', views.addproducts, name='addproducts'),
     path('deleteproducts/', views.deleteproducts, name='deleteproducts'),
     path('getcustomer/', views.getcustomer, name='getcustomer'),
+    
 ]

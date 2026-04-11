@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import json
 from time import strftime
 from django.contrib.auth.models import User
 from datetime import date, timedelta
@@ -95,6 +96,10 @@ def billing(request):
                         Product_gst = Product_gst[i]
                     )
                     sell.save()
+                    products = Products.objects.filter(user = request.user).filter(Product_name = Product_name[i]).first()
+                    if products:
+                        products.Product_stock -= Product_qty[i]
+                        products.save()
         inv_id = Invoice.objects.filter(user = request.user).filter(Inv_number = inv_number).first().id
         return redirect('invoice', inv_id= inv_id)
 
@@ -115,28 +120,72 @@ def getcustomer(request):
             success = "Customer not found"
         return HttpResponse(success)
 
+
+
 @login_required(login_url="/signin/")
 def dashboard(request):
-    context = {"page":"home"}
+    initials = request.user.first_name[0].upper() + request.user.last_name[0].upper() if request.user.first_name and request.user.last_name else "U"
+    inv = Invoice.objects.filter(user = request.user)
+    today_sales = inv.filter(Inv_bill_date = date.today()).aggregate(total=Sum('Inv_Total'))['total'] or 0
+    monthly_sales = inv.filter(Inv_bill_date__year=date.today().year, Inv_bill_date__month=date.today().month).aggregate(total=Sum('Inv_Total'))['total'] or 0
+    total_customers = Customer.objects.filter(user=request.user).count()
+    total_products = Products.objects.filter(user=request.user).count()
+    week = {}
+    Seles_t = 0
+    for i in range(6, -1, -1):
+        day_date = date.today() - timedelta(days=i)
+        day_name = day_date.strftime("%a")
+        week[f"day_{6-i}"] = day_name
+        sales = inv.filter(Inv_bill_date=day_date).aggregate(total=Sum('Inv_Total'))['total'] or 0
+        Seles_t += sales     
+    for i in range(7):
+        day_sales = inv.filter(Inv_bill_date=date.today() - timedelta(days=6-i)).aggregate(total=Sum('Inv_Total'))['total'] or 0
+        week[f"sales_per_{i}"] = (day_sales / Seles_t * 90) if Seles_t != 0 else 0
+    recent_invoices = inv.order_by('-id')[:5]
+    for inv in recent_invoices:   
+        inv.Customer_name = Customer.objects.filter(user=request.user).filter(Customer_mobile = inv.Customer_number).first().Customer_name
+        inv.Inv_items = Sells.objects.filter(user=request.user).filter(Inv_number = inv).count()
+        inv.Inv_status = "Paid" if inv.Inv_due_bill_date <= date.today() else "Pending" 
+        inv.format = Formet.objects.filter(user = request.user).first().Inv_prefix  
+
+    print(week)
+
+    data = {
+        "initials": initials,
+        "today_sales": today_sales,
+        "monthly_sales": monthly_sales,
+        "total_customers": total_customers,
+        "total_products": total_products,   
+        "week": week,
+        "recent_invoices": recent_invoices
+      
+    }
+    context = {"page":"home", "data": data}
     return render(request,'dashboard.html',context)
 
 @login_required(login_url="/signin/")   
 def customers(request):
     user = request.user   
     Cust  = Customer.objects.filter(user=user).order_by('-id')
+    cust_new_this_week =0
+    for c in Cust:
+        if c.id >= Customer.objects.filter(user=user).filter(Customer_mobile = c.Customer_mobile).first().id and c.id >= Customer.objects.filter(user=user).filter(Customer_mobile = c.Customer_mobile).first().id - 5:
+            cust_new_this_week += 1
     cust_total = Cust.count()
-    cust_revenue = 0
-    cust_bills = 0
+    T_revenue = 0
+    Inv = Invoice.objects.filter(user = request.user)
+    for i in Inv:
+        T_revenue += i.Inv_Total
+
     for c in Cust:
         c.Customer_name = c.Customer_name.title()
-        cust_bills += c.customer_bill_count
-        cust_revenue += c.customer_bill_spent
         c.initials = c.Customer_name[0].upper() + c.Customer_name.split(" ")[-1][0].upper()
 
     Stats = {
         "cust_total": cust_total,
-        "cust_revenue": cust_revenue,
-        "cust_bills": cust_bills
+        "T_revenue": T_revenue,
+        "cust_bills": Inv.count(),
+        "cust_new_this_week": cust_new_this_week
     }
 
     context = {"page":"customers", "cust" : Cust , "Stats":Stats }
@@ -203,6 +252,7 @@ def invoice(request, inv_id):
     data = {
         "Shop_name": business.bizName if business else "",
         "Shop_address": business.full_address if business else "",
+        "Shop_tagline" : "Your trusted local shop",
         "Shop_phone": business.phone_number if business else "",
         "Shop_Gstin": business.Gstin if business else "",
         "Inv_format": formet.Inv_prefix if formet else "",
@@ -223,6 +273,7 @@ def invoice(request, inv_id):
     }
     context = {"page":"home", "data": data}
     return render(request,'invoice.html',context)
+
 
 @login_required(login_url="/signin/")
 def products(request):
@@ -305,71 +356,99 @@ def deleteproducts(request):
 
 @login_required(login_url="/signin/")
 def reports(request):
-    User = request.user
-    invoices = Invoice.objects.filter(user=User)
-    total_revenue = sum(inv.Inv_Total for inv in invoices)
-    invoices_generated = invoices.count()
-    avg_order_value = total_revenue / invoices_generated if invoices_generated > 0 else 0
-    total_gst_collected = sum(inv.Inv_GST for inv in invoices)
-    invoices = invoices.order_by('-Inv_bill_date')[:5]
-    sun = 0  
-    mon = 0     
-    tue = 0 
-    wed = 0
-    thu = 0
-    fri = 0
-    sat = 0
-    for inv in invoices:
-        if inv.Inv_bill_date.weekday() == 6:
-            sun += inv.Inv_Total
-        elif inv.Inv_bill_date.weekday() == 0:
-            mon += inv.Inv_Total
-        elif inv.Inv_bill_date.weekday() == 1:
-            tue += inv.Inv_Total
-        elif inv.Inv_bill_date.weekday() == 2:
-            wed += inv.Inv_Total
-        elif inv.Inv_bill_date.weekday() == 3:
-            thu += inv.Inv_Total
-        elif inv.Inv_bill_date.weekday() == 4:
-            fri += inv.Inv_Total
-        elif inv.Inv_bill_date.weekday() == 5:
-            sat += inv.Inv_Total
-    revenue = (max([sun, mon, tue, wed, thu, fri, sat]))
-    sun_height = f'{(sun / revenue) * 130 if revenue > 0 else 0 }px'
-    mon_height = f'{(mon / revenue) * 130 if revenue > 0 else 0 }px'
-    tue_height = f'{(tue / revenue) * 130 if revenue > 0 else 0 }px'
-    wed_height = f'{(wed / revenue) * 130 if revenue > 0 else 0 }px'
-    thu_height = f'{(thu / revenue) * 130 if revenue > 0 else 0 }px'
-    fri_height = f'{(fri / revenue) * 130 if revenue > 0 else 0 }px'
-    sat_height = f'{(sat / revenue) * 130 if revenue > 0 else 0 }px'  
+    Inv = Invoice.objects.filter(user = request.user)
+    total_revenue = 0
+    total_gst =0
+    for i in Inv:
+        total_revenue = i.Inv_Total
+        total_gst = i.Inv_gst
+    total_invoices = Inv.count()
+    avg_order_value = total_revenue/total_invoices if total_invoices != 0 else 0
+    m = {}
+    total_rev_c = 0
+    for i in range(6, -1, -1):
+        month_date = date.today() - timedelta(days=30*i)
+        month_name = month_date.strftime("%b %Y")
+        m[f"month_{7-i}"] = month_name
+        month_revenue = Inv.filter(Inv_bill_date__year=month_date.year, Inv_bill_date__month=month_date.month).aggregate(total=Sum('Inv_Total'))['total'] or 0
+        m[f"month_val_{7-i}"] = month_revenue
+        total_rev_c += month_revenue
+    for i in range(1, 8):
+        month_val = m.get(f"month_val_{i}", 0)
+        m[f"month_val_px_{i}"] = (month_val / total_rev_c * 130) if total_rev_c != 0 else 0
+    p = {}
+    sells = Sells.objects.filter(user = request.user)
+    for s in sells:
+        if s.Product_name in p:
+            p[s.Product_name] += s.Product_price * s.Product_qty * (1 + (s.Product_gst ) / 100) if s.Product_gst != 0 else s.Product_price * s.Product_qty
+        else:
+            p[s.Product_name] = s.Product_price * s.Product_qty * (1 + (s.Product_gst ) / 100) if s.Product_gst != 0 else s.Product_price * s.Product_qty
+    p = dict(sorted(p.items(), key=lambda item: item[1], reverse=True))
+    p_t = {}
+    total_p_t = sum(p.values())
+    for i in range(1, 6):
+        try:
+            top_product = list(p.items())[i-1]
+            p_t[f"top_product_{i}_name"] = top_product[0]
+            p_t[f"top_product_{i}_revenue"] = top_product[1]
+            p_t[f"top_product_{i}_per"] = (top_product[1] / total_p_t * 100) if total_p_t != 0 else 0
+        except IndexError:
+            p_t[f"top_product_{i}_name"] = "N/A"
+            p_t[f"top_product_{i}_revenue"] = 0 
+            p_t[f"top_product_{i}_per"] = 0
+    month_summary = []
+    for i in range(11, -1, -1):
+        month_date = date.today() - timedelta(days=30*i)
+        month_name = month_date.strftime("%b %Y")
+        
+        invoice_count = Inv.filter(Inv_bill_date__year=month_date.year, Inv_bill_date__month=month_date.month).count()
+        gross_sales = Inv.filter(Inv_bill_date__year=month_date.year, Inv_bill_date__month=month_date.month).aggregate(total=Sum('Inv_Total'))['total'] or 0
+        gst_collected= Inv.filter(Inv_bill_date__year=month_date.year, Inv_bill_date__month=month_date.month).aggregate(total=Sum('Inv_gst'))['total'] or 0
+        discounts= Inv.filter(Inv_bill_date__year=month_date.year, Inv_bill_date__month=month_date.month).aggregate(total=Sum('Inv_discount'))['total'] or 0
+        net_revenue= gross_sales - discounts
+        Growth = ((net_revenue - month_summary[-1]['net_revenue']) / month_summary[-1]['net_revenue'] * 100) if len(month_summary) > 0 and month_summary[-1]['net_revenue'] != 0 else 0     
+        month_summary.append({
+            "month_name": month_name,
+            "invoice_count": invoice_count,
+            "gross_sales":gross_sales,
+            "gst_collected":gst_collected,
+            "discounts":discounts,
+            "net_revenue":net_revenue,
+            "Growth":Growth
 
-    top = {}
-    sells = Sells.objects.filter(user=User).annotate(total_qty=Sum('product_qty')).order_by('product_name')
-    for sell in sells:
-        top[sell.name] = sell.total_qty * sell.Product_price * (1 + (sell.Product_gst / 100))
-    top = dict(sorted(top.items(), key=lambda item: item[1], reverse=True)[:5])
-    top_1_h = top[list(top.keys())[0]] / sum(top.values()) * 100 if sum(top.values()) > 0 else 0
-    top_2_h = top[list(top.keys())[1]] / sum(top.values()) * 100 if sum(top.values()) > 0 else 0
-    top_3_h = top[list(top.keys())[2]] / sum(top.values()) * 100 if sum(top.values()) > 0 else 0
-    top_4_h = top[list(top.keys())[3]] / sum(top.values()) * 100 if sum(top.values()) > 0 else 0
-    top_5_h = top[list(top.keys())[4]] / sum(top.values()) * 100 if sum(top.values()) > 0 else 0    
-
-    data =  { "total_revenue": total_revenue, "invoices_generated": invoices_generated,"avg_order_value": avg_order_value,"total_gst_collected": total_gst_collected,"sun": sun,"mon": mon,"tue": tue,"wed": wed,"thu": thu,"fri": fri,"sat": sat,"sun_height": sun_height,"mon_height": mon_height,"tue_height": tue_height,"wed_height": wed_height,"thu_height": thu_height,"fri_height": fri_height,"sat_height": sat_height ,"top": top,"top_1_h": top_1_h,"top_2_h": top_2_h,"top_3_h": top_3_h,"top_4_h": top_4_h,"top_5_h": top_5_h }
-    context = {"page":"home", "data": data}
+        })
+    print(month_summary)    
+    data= {
+        "total_revenue": total_revenue,
+        "total_invoices":total_invoices,
+        "total_gst":total_gst,
+        "avg_order_value":avg_order_value,
+        "m": m,
+        "p": p_t,
+        "monthly_summary": list(reversed(month_summary))
+    }
+    context = {"page":"home", "data": data }
     return render(request,'reports.html',context)
 
 @login_required(login_url="/signin/")
 def sales_history(request):
     user = request.user
     inv = Invoice.objects.filter(user =user)
-    total_coll = inv.filter(Inv_due_bill_date= date.today()).aggregate(total=Sum('Inv_Total'))['total'] or 0
-    total_pen = inv.filter(Inv_due_bill_date__lte = date.today()).aggregate(total=Sum('Inv_Total'))['total'] or 0
+    total_coll = 0
+    total_pen = 0
+    for i in inv:
+        if i.Inv_due_bill_date > date.today():
+            total_pen += i.Inv_Total
+        else:
+            total_coll += i.Inv_Total
+            
     total_T_rev = inv.filter(Inv_due_bill_date__gte = date.today()).aggregate(total=Sum('Inv_Total'))['total'] or 0
-    invoice = inv.order_by('-Inv_bill_date')
+    invoice = inv.order_by('Inv_number')
     formet = Formet.objects.filter(user = user).first()
-    for i in invoice:    
-            i.Inv_status = "Paid" if i.Inv_due_bill_date <= date.today() else "Pending"
-            i.Customer_name = Customer.objects.filter(user=user).filter(Customer_mobile = i.Customer_number).first().Customer_name
+    for i in invoice: 
+        i.Inv_items = Sells.objects.filter(user=user).filter(Inv_number = i).count()   
+        i.Inv_status = "Paid" if i.Inv_due_bill_date <= date.today() else "Pending"
+        i.Customer_name = Customer.objects.filter(user=user).filter(Customer_mobile = i.Customer_number).first().Customer_name
     data = {
         "inv" : invoice,
         "total_inv": inv.count(),
@@ -380,6 +459,14 @@ def sales_history(request):
     }
     context = {"page":"home","data": data}
     return render(request,'sales_history.html',context)
+
+def invoice_h(request):
+    if request.method == "POST":
+        inv_number = request.POST.get("inv_number")
+        inv = Invoice.objects.filter(user = request.user).filter(Inv_number = inv_number).first()
+        if inv:
+            return redirect('invoice', inv_id= inv.id)
+    return redirect('/sales_history/')
 
 @login_required(login_url="/signin/")
 def settings(request): 

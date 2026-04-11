@@ -10,6 +10,9 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
     rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="{% static 'invoice_generator.js' %}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <link rel="stylesheet" href="{% static 'invoice.css' %}">
 </head>
@@ -31,6 +34,7 @@
       <a href="{% url 'customers' %}" class="nav-link-item"><i class="bi bi-people"></i> Customers</a>
       <div class="nav-label mt-2">Business</div>
       <!-- <a href="{% url 'reports' %}" class="nav-link-item"><i class="bi bi-bar-chart-line"></i> Reports</a> -->
+      <a href="{% url 'reports' %}" class="nav-link-item"><i class="bi bi-bar-chart-line"></i> Reports</a>
       <a href="{% url 'settings' %}" class="nav-link-item"><i class="bi bi-gear"></i> Settings</a>
     </nav>
     <div class="sidebar-footer"><a href="{% url 'signin' %}"><i class="bi bi-box-arrow-left"></i> Logout</a></div>
@@ -56,7 +60,7 @@
           <i class="bi bi-printer me-1"></i> Print
         </button>
         <!-- Download PDF using browser's built-in PDF print -->
-        <button class="btn btn-outline-primary btn-sm" onclick="generatePDF()">
+        <button class="btn btn-outline-primary btn-sm" onclick="generatePDF ()">
           <i class="bi bi-file-earmark-pdf me-1"></i> Download PDF
         </button>
         <a href="{% url 'billing' %}" class="btn btn-primary btn-sm">
@@ -180,265 +184,106 @@
     </div><!-- /invoice-card -->
 
   </main>
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
+    // // Set invoice date to today
+    // document.getElementById('invDate').textContent =
+    //   new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
 
-    // Download PDF: opens print dialog with PDF option in modern browsers
+    // // Download PDF: opens print dialog with PDF option in modern browsers
+    // function downloadPDF() {
+    //   window.print();
+    //   // To use a library like jsPDF, add it as a CDN script and call it here.
+    //   // For most use cases, browser print-to-PDF is sufficient.
+    // }
+    // ─── Invoice Data ────────────────────────────────────────────────────────────
+    const invoiceData = {
+      // Shop / Business
+      shop_name: "BillMate Store",
+      shop_tagline: "Your trusted local shop",
+      shop_address: "N-156, New Green City",
+      shop_phone: "9265186613",
+      shop_gstin: "27AABCU9603R1ZM",
 
-    function generatePDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+      // Invoice meta
+      inv_format: "INV",
+      inv_number: "1",
+      inv_date: "Feb. 10, 2026",
+      inv_due_date: "April 11, 2026",
+      inv_payment_method: "Cash",
+      inv_payment_status: "Paid",   // "Paid" | "Unpaid" | "Pending"
 
-      const pageW = 210;
-      const pageH = 297;
-      const ml = 14;
-      const mr = pageW - 14;
-      const contentW = mr - ml;
+      // Customer
+      customer_name: "Hil Patel",
+      customer_mobile: "9265186613",
+      customer_email: "hilpatelss@gmail.com",
 
-      // ─── HEADER ──────────────────────────────────────────────────
-      doc.setFillColor(15, 15, 15);
-      doc.rect(0, 0, pageW, 56, 'F');
+      // Line items
+      items: [
+        { name: "Hjjj", unit_price: 2.00, gst_pct: 12, qty: 1 }
+        // Add more rows here – they are rendered automatically
+        // { name: "Widget B", unit_price: 150.00, gst_pct: 18, qty: 3 },
+      ],
 
-      // Store name
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(17);
-      doc.setTextColor(255, 255, 255);
-      doc.text(, ml, 16);
+      // Summary (computed below – or override manually)
+      discount_pct: 0,
+      notes: "Thank you for your purchase! For queries, contact us at shop@SmartBill.in"
+    };
 
-      // Tagline
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(8.5);
-      doc.setTextColor(170, 170, 170);
-      doc.text({{ data.Shop_name }}, ml, 23);
+    // ─── Derived totals (auto-computed from items) ────────────────────────────────
+    invoiceData.subtotal = invoiceData.items.reduce((s, i) => s + i.unit_price * i.qty, 0);
+    invoiceData.gst_amount = invoiceData.items.reduce(
+      (s, i) => s + (i.unit_price * i.qty * i.gst_pct) / 100, 0
+    );
+    invoiceData.discount_amount =
+      (invoiceData.subtotal * invoiceData.discount_pct) / 100;
+    invoiceData.total =
+      invoiceData.subtotal + invoiceData.gst_amount - invoiceData.discount_amount;
 
-    // Store details
-    doc.setFontSize(8);
-    doc.setTextColor(150, 150, 150);
-    doc.text({{ data.Shop_address }}, ml, 30);
-    doc.text({{ data.Shop_phone }}, ml, 36);
-    doc.text({{ data.Shop_Gstin }}, ml, 42);
+    // ─── Invoice Data ────────────────────────────────────────────────────────────
+const invoiceData = {
+  // Shop / Business
+  shop_name:    "BillMate Store",
+  shop_tagline: "Your trusted local shop",
+  shop_address: "N-156, New Green City",
+  shop_phone:   "9265186613",
+  shop_gstin:   "27AABCU9603R1ZM",
 
-    // INVOICE title right
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(26);
-    doc.setTextColor(255, 255, 255);
-    doc.text('INVOICE', mr, 18, { align: 'right' });
+  // Invoice meta
+  inv_format:         "INV",
+  inv_number:         "1",
+  inv_date:           "Feb. 10, 2026",
+  inv_due_date:       "April 11, 2026",
+  inv_payment_method: "Cash",
+  inv_payment_status: "Paid",   // "Paid" | "Unpaid" | "Pending"
 
-    // Invoice number
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.setTextColor(170, 170, 170);
-    doc.text('#' + {{ data.Inv_format }}{{ data.Inv_number }}, mr, 27, { align: 'right' });
+  // Customer
+  customer_name:   "Hil Patel",
+  customer_mobile: "9265186613",
+  customer_email:  "hilpatelss@gmail.com",
 
-    // Status
-    const status = document.getElementById('payStatus').value;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.setTextColor(210, 210, 210);
-    doc.text(status, mr, 37, { align: 'right' });
+  // Line items
+  items: [
+    { name: "Hjjj", unit_price: 2.00, gst_pct: 12, qty: 1 }
+    // Add more rows here – they are rendered automatically
+    // { name: "Widget B", unit_price: 150.00, gst_pct: 18, qty: 3 },
+  ],
 
-    // ─── META SECTION ─────────────────────────────────────────────
-    let y = 68;
-    const col2x = ml + contentW * 0.38;
-    const col3x = ml + contentW * 0.68;
+  // Summary (computed below – or override manually)
+  discount_pct: 0,
+  notes: "Thank you for your purchase! For queries, contact us at shop@SmartBill.in"
+};
 
-    // BILLED TO
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(7.5);
-    doc.setTextColor(120, 120, 120);
-    doc.text('BILLED TO', ml, y);
+// ─── Derived totals (auto-computed from items) ────────────────────────────────
+invoiceData.subtotal = invoiceData.items.reduce((s, i) => s + i.unit_price * i.qty, 0);
+invoiceData.gst_amount = invoiceData.items.reduce(
+  (s, i) => s + (i.unit_price * i.qty * i.gst_pct) / 100, 0
+);
+invoiceData.discount_amount =
+  (invoiceData.subtotal * invoiceData.discount_pct) / 100;
+invoiceData.total =
+  invoiceData.subtotal + invoiceData.gst_amount - invoiceData.discount_amount;
 
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(12);
-    doc.setTextColor(15, 15, 15);
-    doc.text({{ data.Cust_name }}, ml, y + 7);
-
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.setTextColor(70, 70, 70);
-    const cPhone = {{ data.Cust_phone }};
-    const cEmail = {{ data.Cust_email }};
-    if (cPhone) doc.text('P: ' + cPhone, ml, y + 14);
-    if (cEmail) doc.text(cEmail, ml, y + 20);
-
-
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(7.5);
-    doc.setTextColor(120, 120, 120);
-    doc.text('INVOICE DATE', col2x, y);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(15, 15, 15);
-    doc.text(fmtDate({{ data.Inv_date }}), col2x, y + 7);
-
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(7.5);
-    doc.setTextColor(120, 120, 120);
-    doc.text('DUE DATE', col2x, y + 14);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(15, 15, 15);
-    doc.text(fmtDate({{ data.Inv_due_date }}), col2x, y + 21);
-
-    // PAYMENT METHOD / STATUS
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(7.5);
-    doc.setTextColor(120, 120, 120);
-    doc.text('PAYMENT METHOD', col3x, y);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.setTextColor(15, 15, 15);
-    doc.text({{ data.Inv_payment_method }}, col3x, y + 7);
-
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(7.5);
-    doc.setTextColor(120, 120, 120);
-    doc.text('PAYMENT STATUS', col3x, y + 14);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.setTextColor(40, 40, 40);
-    doc.text(status, col3x, y + 21);
-
-    // ─── DIVIDER ──────────────────────────────────────────────────
-    y += 33;
-    doc.setDrawColor(210, 210, 210);
-    doc.setLineWidth(0.3);
-    doc.line(ml, y, mr, y);
-    y += 8;
-
-    // ─── TABLE HEADER ─────────────────────────────────────────────
-    doc.setFillColor(240, 240, 240);
-    doc.rect(ml, y - 5.5, contentW, 9, 'F');
-
-    // column x positions
-    const c0 = ml;           // #
-    const c1 = ml + 10;      // Product
-    const c2 = ml + 10 + contentW * 0.42; // Unit price
-    const c3 = c2 + 36;      // GST%
-    const c4 = c3 + 22;      // Qty
-
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(7.5);
-    doc.setTextColor(100, 100, 100);
-    doc.text('#', c0, y);
-    doc.text('PRODUCT / DESCRIPTION', c1, y);
-    doc.text('UNIT PRICE', c2, y);
-    doc.text('GST %', c3, y);
-    doc.text('QTY', c4, y);
-    doc.text('TOTAL', mr, y, { align: 'right' });
-
-    y += 5;
-    doc.setDrawColor(210, 210, 210);
-    doc.setLineWidth(0.25);
-    doc.line(ml, y, mr, y);
-    y += 7;
-
-    // ─── LINE ITEMS ───────────────────────────────────────────────
-    const itemRows = document.querySelectorAll('.item-row');
-    let subtotal = 0;
-    let totalGST = 0;
-
-    itemRows.forEach(function (row, i) {
-      const name = row.querySelector('.item-name').value || '-';
-      const price = parseFloat(row.querySelector('.item-price').value) || 0;
-      const gst = parseFloat(row.querySelector('.item-gst').value) || 0;
-      const qty = parseInt(row.querySelector('.item-qty').value) || 1;
-      const gstAmt = price * (gst / 100) * qty;
-      const total = price * qty + gstAmt;
-      subtotal += price * qty;
-      totalGST += gstAmt;
-
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9);
-      doc.setTextColor(100, 100, 100);
-      doc.text(String(i + 1), c0, y);
-
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(10);
-      doc.setTextColor(15, 15, 15);
-      doc.text(name, c1, y);
-
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.5);
-      doc.setTextColor(20, 20, 20);
-      doc.text('Rs.' + price.toFixed(2), c2, y);
-      doc.text(gst + '%', c3, y);
-      doc.text(String(qty), c4, y);
-
-      doc.setFont('helvetica', 'bold');
-      doc.text('Rs.' + total.toFixed(2), mr, y, { align: 'right' });
-
-      y += 5;
-      doc.setDrawColor(230, 230, 230);
-      doc.setLineWidth(0.2);
-      doc.line(ml, y, mr, y);
-      y += 8;
-    });
-
-    // ─── TOTALS ───────────────────────────────────────────────────
-    y += 4;
-    const discPct = parseFloat(document.getElementById('discount').value) || 0;
-    const discAmt = subtotal * (discPct / 100);
-    const grandTotal = subtotal + totalGST - discAmt;
-    const totLabelX = mr - 82;
-
-    function drawRow(label, value, isBold) {
-      doc.setFont('helvetica', isBold ? 'bold' : 'normal');
-      doc.setFontSize(isBold ? 11 : 9.5);
-      doc.setTextColor(isBold ? 10 : 80, isBold ? 10 : 80, isBold ? 10 : 80);
-      doc.text(label, totLabelX, y);
-      doc.text('Rs.' + Math.abs(value).toFixed(2) + (value < 0 ? ' CR' : ''), mr, y, { align: 'right' });
-      y += 8;
-    }
-
-    drawRow('Subtotal', subtotal, false);
-    drawRow('GST Amount', totalGST, false);
-    drawRow('Discount (' + discPct + '%)', discAmt > 0 ? -discAmt : 0, false);
-
-    // total bar
-    doc.setFillColor(15, 15, 15);
-    doc.roundedRect(totLabelX - 5, y - 6, mr - totLabelX + 9, 11, 2, 2, 'F');
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(255, 255, 255);
-    doc.text('Total Amount', totLabelX, y);
-    doc.text('Rs.' + grandTotal.toFixed(2), mr - 2, y, { align: 'right' });
-    y += 18;
-
-    // ─── NOTES ────────────────────────────────────────────────────
-    const notes = document.getElementById('notes').value.trim();
-    if (notes) {
-      const noteLines = doc.splitTextToSize(notes, contentW - 12);
-      const noteH = 16 + noteLines.length * 5;
-      doc.setFillColor(248, 248, 248);
-      doc.setDrawColor(210, 210, 210);
-      doc.setLineWidth(0.3);
-      doc.roundedRect(ml, y, contentW, noteH, 3, 3, 'FD');
-
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(8.5);
-      doc.setTextColor(70, 70, 70);
-      doc.text('NOTES', ml + 5, y + 7);
-
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(8.5);
-      doc.setTextColor(100, 100, 100);
-      doc.text(noteLines, ml + 5, y + 14);
-    }
-
-    // ─── FOOTER ───────────────────────────────────────────────────
-    doc.setFont('helvetica', 'italic');
-    doc.setFontSize(8);
-    doc.setTextColor(160, 160, 160);
-    doc.text('This is a computer-generated invoice. No signature required.', pageW / 2, pageH - 10, { align: 'center' });
-
-    // ─── SAVE ─────────────────────────────────────────────────────
-    const fname = 'invoice-' + document.getElementById('invoiceNum').value + '.pdf';
-    doc.save(fname);
-
-
-    }
   </script>
 </body>
 

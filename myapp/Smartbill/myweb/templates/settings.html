@@ -31,6 +31,7 @@
       <a href="{% url 'customers' %}" class="nav-link-item"><i class="bi bi-people"></i> Customers</a>
       <div class="nav-label mt-2">Business</div>
       <!-- <a href="{% url 'reports' %}" class="nav-link-item"><i class="bi bi-bar-chart-line"></i> Reports</a> -->
+      <a href="{% url 'reports' %}" class="nav-link-item"><i class="bi bi-bar-chart-line"></i> Reports</a>
       <a href="{% url 'settings' %}" class="nav-link-item active"><i class="bi bi-gear"></i> Settings</a>
     </nav>
     <div class="sidebar-footer"><a href="{% url 'signin' %}"><i class="bi bi-box-arrow-left"></i> Logout</a></div>
@@ -185,7 +186,7 @@
                         <label class="form-check-label small" for="showSignature">Show signature area</label>
                       </div>
                       <div class="form-check form-switch mt-2">
-                        <input class="form-check-input" id="Show_TC" name="Show_TC" type="checkbox" id="showTerms" {% if format.Show_TC %}checked{% endif %} />
+                        <input class="form-check-input" id="Show_TC"{% if format.Show_TC %} checked {% endif %} name="Show_TC" type="checkbox" id="showTerms"  />
                         <label class="form-check-label small" for="showTerms">Show terms &amp; conditions</label>
                       </div>
                     </div>
