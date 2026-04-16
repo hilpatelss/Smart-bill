@@ -1,0 +1,1028 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "username": "rahul_sharma",
+      "email": "rahul@billmate.in",
+      "password": "pbkdf2_sha256$placeholder",
+      "first_name": "Rahul",
+      "last_name": "Sharma",
+      "is_active": true,
+      "is_staff": false,
+      "is_superuser": false
+    }
+  },
+  {
+    "model": "yourapp.business",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "phone_number": 9265186613,
+      "bizName": "Sharma Electronics",
+      "bizType": "Retail",
+      "Gstin": "24AABCS1429B1ZB",
+      "City": "Ahmedabad",
+      "full_address": "Shop No. 12, Manek Chowk, Ahmedabad, Gujarat - 380001",
+      "Pan_number": "AABCS1429B",
+      "Gst_enable": true,
+      "default_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.formet",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "Inv_prefix": "SE-INV-",
+      "Inv_footer": "Thank you for shopping at Sharma Electronics! Contact: rahul@billmate.in",
+      "Inv_due_days": 15,
+      "Show_signature_area": true,
+      "Show_TC": true
+    }
+  },
+  {
+    "model": "yourapp.customer",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "Customer_name": "Amit Patel",
+      "Customer_mobile": 9876543210,
+      "Customer_email": "amit.patel@gmail.com",
+      "customer_bill_count": 8,
+      "customer_bill_spent": 42500
+    }
+  },
+  {
+    "model": "yourapp.customer",
+    "pk": 2,
+    "fields": {
+      "user": 1,
+      "Customer_name": "Priya Mehta",
+      "Customer_mobile": 9823456781,
+      "Customer_email": "priya.mehta@yahoo.com",
+      "customer_bill_count": 5,
+      "customer_bill_spent": 28900
+    }
+  },
+  {
+    "model": "yourapp.customer",
+    "pk": 3,
+    "fields": {
+      "user": 1,
+      "Customer_name": "Suresh Joshi",
+      "Customer_mobile": 9712345678,
+      "Customer_email": "suresh.joshi@outlook.com",
+      "customer_bill_count": 12,
+      "customer_bill_spent": 67300
+    }
+  },
+  {
+    "model": "yourapp.customer",
+    "pk": 4,
+    "fields": {
+      "user": 1,
+      "Customer_name": "Kavita Shah",
+      "Customer_mobile": 9654321098,
+      "Customer_email": "kavita.shah@gmail.com",
+      "customer_bill_count": 3,
+      "customer_bill_spent": 14750
+    }
+  },
+  {
+    "model": "yourapp.customer",
+    "pk": 5,
+    "fields": {
+      "user": 1,
+      "Customer_name": "Nikhil Desai",
+      "Customer_mobile": 9543210987,
+      "Customer_email": "nikhil.desai@rediffmail.com",
+      "customer_bill_count": 7,
+      "customer_bill_spent": 38200
+    }
+  },
+  {
+    "model": "yourapp.customer",
+    "pk": 6,
+    "fields": {
+      "user": 1,
+      "Customer_name": "Ritu Verma",
+      "Customer_mobile": 9432109876,
+      "Customer_email": "ritu.verma@gmail.com",
+      "customer_bill_count": 4,
+      "customer_bill_spent": 19600
+    }
+  },
+  {
+    "model": "yourapp.customer",
+    "pk": 7,
+    "fields": {
+      "user": 1,
+      "Customer_name": "Deepak Nair",
+      "Customer_mobile": 9321098765,
+      "Customer_email": "deepak.nair@gmail.com",
+      "customer_bill_count": 9,
+      "customer_bill_spent": 51000
+    }
+  },
+  {
+    "model": "yourapp.customer",
+    "pk": 8,
+    "fields": {
+      "user": 1,
+      "Customer_name": "Sneha Kulkarni",
+      "Customer_mobile": 9210987654,
+      "Customer_email": "sneha.kulkarni@hotmail.com",
+      "customer_bill_count": 6,
+      "customer_bill_spent": 33400
+    }
+  },
+  {
+    "model": "yourapp.customer",
+    "pk": 9,
+    "fields": {
+      "user": 1,
+      "Customer_name": "Vijay Rao",
+      "Customer_mobile": 9109876543,
+      "Customer_email": "vijay.rao@gmail.com",
+      "customer_bill_count": 2,
+      "customer_bill_spent": 9800
+    }
+  },
+  {
+    "model": "yourapp.customer",
+    "pk": 10,
+    "fields": {
+      "user": 1,
+      "Customer_name": "Anita Gupta",
+      "Customer_mobile": 9098765432,
+      "Customer_email": "anita.gupta@gmail.com",
+      "customer_bill_count": 11,
+      "customer_bill_spent": 59750
+    }
+  },
+  {
+    "model": "yourapp.products",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "Product_name": "Samsung 43\" LED TV",
+      "Product_price": 32999,
+      "Product_stock": 12,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.products",
+    "pk": 2,
+    "fields": {
+      "user": 1,
+      "Product_name": "LG 1.5 Ton Split AC",
+      "Product_price": 38500,
+      "Product_stock": 8,
+      "Product_gst": 28
+    }
+  },
+  {
+    "model": "yourapp.products",
+    "pk": 3,
+    "fields": {
+      "user": 1,
+      "Product_name": "Sony Bluetooth Speaker",
+      "Product_price": 4999,
+      "Product_stock": 25,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.products",
+    "pk": 4,
+    "fields": {
+      "user": 1,
+      "Product_name": "Philips LED Bulb 9W (Pack of 4)",
+      "Product_price": 349,
+      "Product_stock": 150,
+      "Product_gst": 12
+    }
+  },
+  {
+    "model": "yourapp.products",
+    "pk": 5,
+    "fields": {
+      "user": 1,
+      "Product_name": "Havells Ceiling Fan",
+      "Product_price": 2799,
+      "Product_stock": 30,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.products",
+    "pk": 6,
+    "fields": {
+      "user": 1,
+      "Product_name": "Bosch Washing Machine 7kg",
+      "Product_price": 29999,
+      "Product_stock": 5,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.products",
+    "pk": 7,
+    "fields": {
+      "user": 1,
+      "Product_name": "Mi Power Bank 20000mAh",
+      "Product_price": 1299,
+      "Product_stock": 60,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.products",
+    "pk": 8,
+    "fields": {
+      "user": 1,
+      "Product_name": "Logitech Wireless Mouse",
+      "Product_price": 999,
+      "Product_stock": 45,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.products",
+    "pk": 9,
+    "fields": {
+      "user": 1,
+      "Product_name": "TP-Link WiFi Router",
+      "Product_price": 2199,
+      "Product_stock": 20,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.products",
+    "pk": 10,
+    "fields": {
+      "user": 1,
+      "Product_name": "Syska LED Strip Light 5m",
+      "Product_price": 899,
+      "Product_stock": 80,
+      "Product_gst": 12
+    }
+  },
+  {
+    "model": "yourapp.products",
+    "pk": 11,
+    "fields": {
+      "user": 1,
+      "Product_name": "OnePlus Nord Buds 2",
+      "Product_price": 3499,
+      "Product_stock": 35,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.products",
+    "pk": 12,
+    "fields": {
+      "user": 1,
+      "Product_name": "Prestige Induction Cooktop",
+      "Product_price": 2499,
+      "Product_stock": 18,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.invoice",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "Inv_number": 1001,
+      "Inv_Total": 38938.0,
+      "Inv_subtotal": 32999.0,
+      "Inv_gst": 5939.0,
+      "Inv_discount": 0.0,
+      "Inv_additional_charges": 0.0,
+      "Inv_internal_notes": "Delivered to customer premises",
+      "Inv_bill_date": "2024-01-05",
+      "Inv_due_bill_date": "2024-01-20",
+      "Inv_payment_mode": "UPI",
+      "Customer_number": 9876543210
+    }
+  },
+  {
+    "model": "yourapp.invoice",
+    "pk": 2,
+    "fields": {
+      "user": 1,
+      "Inv_number": 1002,
+      "Inv_Total": 9438.82,
+      "Inv_subtotal": 7998.0,
+      "Inv_gst": 1439.64,
+      "Inv_discount": 0.0,
+      "Inv_additional_charges": 0.0,
+      "Inv_internal_notes": "",
+      "Inv_bill_date": "2024-01-08",
+      "Inv_due_bill_date": "2024-01-23",
+      "Inv_payment_mode": "Cash",
+      "Customer_number": 9823456781
+    }
+  },
+  {
+    "model": "yourapp.invoice",
+    "pk": 3,
+    "fields": {
+      "user": 1,
+      "Inv_number": 1003,
+      "Inv_Total": 45178.0,
+      "Inv_subtotal": 38300.0,
+      "Inv_gst": 8778.0,
+      "Inv_discount": 1900.0,
+      "Inv_additional_charges": 0.0,
+      "Inv_internal_notes": "Bulk order, special discount applied",
+      "Inv_bill_date": "2024-01-12",
+      "Inv_due_bill_date": "2024-01-27",
+      "Inv_payment_mode": "Bank Transfer",
+      "Customer_number": 9712345678
+    }
+  },
+  {
+    "model": "yourapp.invoice",
+    "pk": 4,
+    "fields": {
+      "user": 1,
+      "Inv_number": 1004,
+      "Inv_Total": 3298.88,
+      "Inv_subtotal": 2798.0,
+      "Inv_gst": 503.64,
+      "Inv_discount": 0.0,
+      "Inv_additional_charges": 0.0,
+      "Inv_internal_notes": "",
+      "Inv_bill_date": "2024-01-15",
+      "Inv_due_bill_date": "2024-01-30",
+      "Inv_payment_mode": "Cash",
+      "Customer_number": 9654321098
+    }
+  },
+  {
+    "model": "yourapp.invoice",
+    "pk": 5,
+    "fields": {
+      "user": 1,
+      "Inv_number": 1005,
+      "Inv_Total": 5878.82,
+      "Inv_subtotal": 4998.0,
+      "Inv_gst": 899.64,
+      "Inv_discount": 0.0,
+      "Inv_additional_charges": 0.0,
+      "Inv_internal_notes": "Corporate client",
+      "Inv_bill_date": "2024-01-18",
+      "Inv_due_bill_date": "2024-02-02",
+      "Inv_payment_mode": "UPI",
+      "Customer_number": 9543210987
+    }
+  },
+  {
+    "model": "yourapp.invoice",
+    "pk": 6,
+    "fields": {
+      "user": 1,
+      "Inv_number": 1006,
+      "Inv_Total": 2596.64,
+      "Inv_subtotal": 2198.0,
+      "Inv_gst": 395.64,
+      "Inv_discount": 0.0,
+      "Inv_additional_charges": 0.0,
+      "Inv_internal_notes": "",
+      "Inv_bill_date": "2024-01-22",
+      "Inv_due_bill_date": "2024-02-06",
+      "Inv_payment_mode": "Card",
+      "Customer_number": 9432109876
+    }
+  },
+  {
+    "model": "yourapp.invoice",
+    "pk": 7,
+    "fields": {
+      "user": 1,
+      "Inv_number": 1007,
+      "Inv_Total": 35398.0,
+      "Inv_subtotal": 29999.0,
+      "Inv_gst": 5399.82,
+      "Inv_discount": 0.0,
+      "Inv_additional_charges": 0.0,
+      "Inv_internal_notes": "Installation scheduled",
+      "Inv_bill_date": "2024-01-25",
+      "Inv_due_bill_date": "2024-02-09",
+      "Inv_payment_mode": "Bank Transfer",
+      "Customer_number": 9321098765
+    }
+  },
+  {
+    "model": "yourapp.invoice",
+    "pk": 8,
+    "fields": {
+      "user": 1,
+      "Inv_number": 1008,
+      "Inv_Total": 1533.82,
+      "Inv_subtotal": 1298.0,
+      "Inv_gst": 233.64,
+      "Inv_discount": 0.0,
+      "Inv_additional_charges": 0.0,
+      "Inv_internal_notes": "",
+      "Inv_bill_date": "2024-02-01",
+      "Inv_due_bill_date": "2024-02-16",
+      "Inv_payment_mode": "UPI",
+      "Customer_number": 9210987654
+    }
+  },
+  {
+    "model": "yourapp.invoice",
+    "pk": 9,
+    "fields": {
+      "user": 1,
+      "Inv_number": 1009,
+      "Inv_Total": 11580.0,
+      "Inv_subtotal": 9830.0,
+      "Inv_gst": 1769.4,
+      "Inv_discount": 500.0,
+      "Inv_additional_charges": 0.0,
+      "Inv_internal_notes": "Loyalty discount applied",
+      "Inv_bill_date": "2024-02-05",
+      "Inv_due_bill_date": "2024-02-20",
+      "Inv_payment_mode": "UPI",
+      "Customer_number": 9109876543
+    }
+  },
+  {
+    "model": "yourapp.invoice",
+    "pk": 10,
+    "fields": {
+      "user": 1,
+      "Inv_number": 1010,
+      "Inv_Total": 70382.0,
+      "Inv_subtotal": 59645.0,
+      "Inv_gst": 10737.1,
+      "Inv_discount": 2000.0,
+      "Inv_additional_charges": 0.0,
+      "Inv_internal_notes": "Repeat customer bulk order",
+      "Inv_bill_date": "2024-02-10",
+      "Inv_due_bill_date": "2024-02-25",
+      "Inv_payment_mode": "Bank Transfer",
+      "Customer_number": 9098765432
+    }
+  },
+  {
+    "model": "yourapp.invoice",
+    "pk": 11,
+    "fields": {
+      "user": 1,
+      "Inv_number": 1011,
+      "Inv_Total": 4133.82,
+      "Inv_subtotal": 3498.0,
+      "Inv_gst": 629.64,
+      "Inv_discount": 0.0,
+      "Inv_additional_charges": 0.0,
+      "Inv_internal_notes": "",
+      "Inv_bill_date": "2024-02-14",
+      "Inv_due_bill_date": "2024-03-01",
+      "Inv_payment_mode": "Cash",
+      "Customer_number": 9876543210
+    }
+  },
+  {
+    "model": "yourapp.invoice",
+    "pk": 12,
+    "fields": {
+      "user": 1,
+      "Inv_number": 1012,
+      "Inv_Total": 2950.88,
+      "Inv_subtotal": 2498.0,
+      "Inv_gst": 449.64,
+      "Inv_discount": 0.0,
+      "Inv_additional_charges": 0.0,
+      "Inv_internal_notes": "",
+      "Inv_bill_date": "2024-02-18",
+      "Inv_due_bill_date": "2024-03-04",
+      "Inv_payment_mode": "UPI",
+      "Customer_number": 9823456781
+    }
+  },
+  {
+    "model": "yourapp.invoice",
+    "pk": 13,
+    "fields": {
+      "user": 1,
+      "Inv_number": 1013,
+      "Inv_Total": 46638.0,
+      "Inv_subtotal": 39528.0,
+      "Inv_gst": 7114.44,
+      "Inv_discount": 1000.0,
+      "Inv_additional_charges": 200.0,
+      "Inv_internal_notes": "Delivery charge included",
+      "Inv_bill_date": "2024-02-22",
+      "Inv_due_bill_date": "2024-03-08",
+      "Inv_payment_mode": "Bank Transfer",
+      "Customer_number": 9712345678
+    }
+  },
+  {
+    "model": "yourapp.invoice",
+    "pk": 14,
+    "fields": {
+      "user": 1,
+      "Inv_number": 1014,
+      "Inv_Total": 1062.88,
+      "Inv_subtotal": 898.0,
+      "Inv_gst": 107.76,
+      "Inv_discount": 0.0,
+      "Inv_additional_charges": 0.0,
+      "Inv_internal_notes": "",
+      "Inv_bill_date": "2024-02-27",
+      "Inv_due_bill_date": "2024-03-13",
+      "Inv_payment_mode": "Cash",
+      "Customer_number": 9654321098
+    }
+  },
+  {
+    "model": "yourapp.invoice",
+    "pk": 15,
+    "fields": {
+      "user": 1,
+      "Inv_number": 1015,
+      "Inv_Total": 6498.82,
+      "Inv_subtotal": 5498.0,
+      "Inv_gst": 989.64,
+      "Inv_discount": 0.0,
+      "Inv_additional_charges": 0.0,
+      "Inv_internal_notes": "",
+      "Inv_bill_date": "2024-03-03",
+      "Inv_due_bill_date": "2024-03-18",
+      "Inv_payment_mode": "Card",
+      "Customer_number": 9543210987
+    }
+  },
+  {
+    "model": "yourapp.invoice",
+    "pk": 16,
+    "fields": {
+      "user": 1,
+      "Inv_number": 1016,
+      "Inv_Total": 39299.0,
+      "Inv_subtotal": 33300.0,
+      "Inv_gst": 5994.0,
+      "Inv_discount": 0.0,
+      "Inv_additional_charges": 0.0,
+      "Inv_internal_notes": "TV + AC combo deal",
+      "Inv_bill_date": "2024-03-07",
+      "Inv_due_bill_date": "2024-03-22",
+      "Inv_payment_mode": "Bank Transfer",
+      "Customer_number": 9432109876
+    }
+  },
+  {
+    "model": "yourapp.invoice",
+    "pk": 17,
+    "fields": {
+      "user": 1,
+      "Inv_number": 1017,
+      "Inv_Total": 1181.88,
+      "Inv_subtotal": 999.0,
+      "Inv_gst": 179.82,
+      "Inv_discount": 0.0,
+      "Inv_additional_charges": 0.0,
+      "Inv_internal_notes": "",
+      "Inv_bill_date": "2024-03-11",
+      "Inv_due_bill_date": "2024-03-26",
+      "Inv_payment_mode": "UPI",
+      "Customer_number": 9321098765
+    }
+  },
+  {
+    "model": "yourapp.invoice",
+    "pk": 18,
+    "fields": {
+      "user": 1,
+      "Inv_number": 1018,
+      "Inv_Total": 8158.0,
+      "Inv_subtotal": 6896.0,
+      "Inv_gst": 1241.28,
+      "Inv_discount": 0.0,
+      "Inv_additional_charges": 0.0,
+      "Inv_internal_notes": "",
+      "Inv_bill_date": "2024-03-15",
+      "Inv_due_bill_date": "2024-03-30",
+      "Inv_payment_mode": "Cash",
+      "Customer_number": 9210987654
+    }
+  },
+  {
+    "model": "yourapp.invoice",
+    "pk": 19,
+    "fields": {
+      "user": 1,
+      "Inv_number": 1019,
+      "Inv_Total": 2950.88,
+      "Inv_subtotal": 2498.0,
+      "Inv_gst": 449.64,
+      "Inv_discount": 0.0,
+      "Inv_additional_charges": 0.0,
+      "Inv_internal_notes": "",
+      "Inv_bill_date": "2024-03-19",
+      "Inv_due_bill_date": "2024-04-03",
+      "Inv_payment_mode": "UPI",
+      "Customer_number": 9109876543
+    }
+  },
+  {
+    "model": "yourapp.invoice",
+    "pk": 20,
+    "fields": {
+      "user": 1,
+      "Inv_number": 1020,
+      "Inv_Total": 42998.0,
+      "Inv_subtotal": 36440.0,
+      "Inv_gst": 6559.2,
+      "Inv_discount": 1500.0,
+      "Inv_additional_charges": 0.0,
+      "Inv_internal_notes": "Festival sale discount",
+      "Inv_bill_date": "2024-03-25",
+      "Inv_due_bill_date": "2024-04-09",
+      "Inv_payment_mode": "Bank Transfer",
+      "Customer_number": 9098765432
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "Inv_number": 1,
+      "Product_name": "Samsung 43\" LED TV",
+      "Product_qty": 1,
+      "Product_price": 32999,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 2,
+    "fields": {
+      "user": 1,
+      "Inv_number": 2,
+      "Product_name": "Sony Bluetooth Speaker",
+      "Product_qty": 1,
+      "Product_price": 4999,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 3,
+    "fields": {
+      "user": 1,
+      "Inv_number": 2,
+      "Product_name": "Syska LED Strip Light 5m",
+      "Product_qty": 3,
+      "Product_price": 899,
+      "Product_gst": 12
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 4,
+    "fields": {
+      "user": 1,
+      "Inv_number": 3,
+      "Product_name": "LG 1.5 Ton Split AC",
+      "Product_qty": 1,
+      "Product_price": 38500,
+      "Product_gst": 28
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 5,
+    "fields": {
+      "user": 1,
+      "Inv_number": 4,
+      "Product_name": "Havells Ceiling Fan",
+      "Product_qty": 1,
+      "Product_price": 2799,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 6,
+    "fields": {
+      "user": 1,
+      "Inv_number": 5,
+      "Product_name": "OnePlus Nord Buds 2",
+      "Product_qty": 1,
+      "Product_price": 3499,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 7,
+    "fields": {
+      "user": 1,
+      "Inv_number": 5,
+      "Product_name": "Mi Power Bank 20000mAh",
+      "Product_qty": 1,
+      "Product_price": 1299,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 8,
+    "fields": {
+      "user": 1,
+      "Inv_number": 6,
+      "Product_name": "TP-Link WiFi Router",
+      "Product_qty": 1,
+      "Product_price": 2199,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 9,
+    "fields": {
+      "user": 1,
+      "Inv_number": 7,
+      "Product_name": "Bosch Washing Machine 7kg",
+      "Product_qty": 1,
+      "Product_price": 29999,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 10,
+    "fields": {
+      "user": 1,
+      "Inv_number": 8,
+      "Product_name": "Mi Power Bank 20000mAh",
+      "Product_qty": 1,
+      "Product_price": 1299,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 11,
+    "fields": {
+      "user": 1,
+      "Inv_number": 9,
+      "Product_name": "Prestige Induction Cooktop",
+      "Product_qty": 2,
+      "Product_price": 2499,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 12,
+    "fields": {
+      "user": 1,
+      "Inv_number": 9,
+      "Product_name": "Philips LED Bulb 9W (Pack of 4)",
+      "Product_qty": 10,
+      "Product_price": 349,
+      "Product_gst": 12
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 13,
+    "fields": {
+      "user": 1,
+      "Inv_number": 9,
+      "Product_name": "Logitech Wireless Mouse",
+      "Product_qty": 2,
+      "Product_price": 999,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 14,
+    "fields": {
+      "user": 1,
+      "Inv_number": 10,
+      "Product_name": "Samsung 43\" LED TV",
+      "Product_qty": 1,
+      "Product_price": 32999,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 15,
+    "fields": {
+      "user": 1,
+      "Inv_number": 10,
+      "Product_name": "LG 1.5 Ton Split AC",
+      "Product_qty": 1,
+      "Product_price": 38500,
+      "Product_gst": 28
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 16,
+    "fields": {
+      "user": 1,
+      "Inv_number": 11,
+      "Product_name": "OnePlus Nord Buds 2",
+      "Product_qty": 1,
+      "Product_price": 3499,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 17,
+    "fields": {
+      "user": 1,
+      "Inv_number": 12,
+      "Product_name": "Prestige Induction Cooktop",
+      "Product_qty": 1,
+      "Product_price": 2499,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 18,
+    "fields": {
+      "user": 1,
+      "Inv_number": 13,
+      "Product_name": "Samsung 43\" LED TV",
+      "Product_qty": 1,
+      "Product_price": 32999,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 19,
+    "fields": {
+      "user": 1,
+      "Inv_number": 13,
+      "Product_name": "LG 1.5 Ton Split AC",
+      "Product_qty": 1,
+      "Product_price": 38500,
+      "Product_gst": 28
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 20,
+    "fields": {
+      "user": 1,
+      "Inv_number": 14,
+      "Product_name": "Syska LED Strip Light 5m",
+      "Product_qty": 1,
+      "Product_price": 899,
+      "Product_gst": 12
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 21,
+    "fields": {
+      "user": 1,
+      "Inv_number": 15,
+      "Product_name": "Sony Bluetooth Speaker",
+      "Product_qty": 1,
+      "Product_price": 4999,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 22,
+    "fields": {
+      "user": 1,
+      "Inv_number": 15,
+      "Product_name": "Logitech Wireless Mouse",
+      "Product_qty": 1,
+      "Product_price": 999,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 23,
+    "fields": {
+      "user": 1,
+      "Inv_number": 16,
+      "Product_name": "Samsung 43\" LED TV",
+      "Product_qty": 1,
+      "Product_price": 32999,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 24,
+    "fields": {
+      "user": 1,
+      "Inv_number": 16,
+      "Product_name": "LG 1.5 Ton Split AC",
+      "Product_qty": 1,
+      "Product_price": 38500,
+      "Product_gst": 28
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 25,
+    "fields": {
+      "user": 1,
+      "Inv_number": 17,
+      "Product_name": "Logitech Wireless Mouse",
+      "Product_qty": 1,
+      "Product_price": 999,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 26,
+    "fields": {
+      "user": 1,
+      "Inv_number": 18,
+      "Product_name": "Havells Ceiling Fan",
+      "Product_qty": 2,
+      "Product_price": 2799,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 27,
+    "fields": {
+      "user": 1,
+      "Inv_number": 18,
+      "Product_name": "Philips LED Bulb 9W (Pack of 4)",
+      "Product_qty": 4,
+      "Product_price": 349,
+      "Product_gst": 12
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 28,
+    "fields": {
+      "user": 1,
+      "Inv_number": 19,
+      "Product_name": "Prestige Induction Cooktop",
+      "Product_qty": 1,
+      "Product_price": 2499,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 29,
+    "fields": {
+      "user": 1,
+      "Inv_number": 20,
+      "Product_name": "Samsung 43\" LED TV",
+      "Product_qty": 1,
+      "Product_price": 32999,
+      "Product_gst": 18
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 30,
+    "fields": {
+      "user": 1,
+      "Inv_number": 20,
+      "Product_name": "LG 1.5 Ton Split AC",
+      "Product_qty": 1,
+      "Product_price": 38500,
+      "Product_gst": 28
+    }
+  },
+  {
+    "model": "yourapp.sells",
+    "pk": 31,
+    "fields": {
+      "user": 1,
+      "Inv_number": 20,
+      "Product_name": "Sony Bluetooth Speaker",
+      "Product_qty": 2,
+      "Product_price": 4999,
+      "Product_gst": 18
+    }
+  }
+]

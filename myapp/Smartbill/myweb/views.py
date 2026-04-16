@@ -341,7 +341,7 @@ def deleteproducts(request):
         prod = Products.objects.filter(user=User).filter(id = Products_id).first()
         if prod:
             prod.delete()
-        return redirect('/customers/')
+        return redirect('/products/')
     return redirect('/products/')
 
 @login_required(login_url="/signin/")
