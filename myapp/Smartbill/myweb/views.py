@@ -146,7 +146,7 @@ def dashboard(request):
         week[f"sales_per_{i}"] = (day_sales / Seles_t * 90) if Seles_t != 0 else 0
     recent_invoices = inv.order_by('-id')[:5]
     for inv in recent_invoices:   
-        inv.Customer_name = Customer.objects.filter(user=request.user).filter(Customer_mobile = inv.Customer_number).first().Customer_name
+        inv.Customer_name = Customer.objects.filter(user=request.user).filter(Customer_mobile = inv.Customer_number).first().Customer_name if Customer.objects.filter(user=request.user).filter(Customer_mobile = inv.Customer_number).exists() else " Unknown"
         inv.Inv_items = Sells.objects.filter(user=request.user).filter(Inv_number = inv).count()
         inv.Inv_status = "Paid" if inv.Inv_due_bill_date <= date.today() else "Pending" 
         inv.format = Formet.objects.filter(user = request.user).first().Inv_prefix  
@@ -435,7 +435,11 @@ def sales_history(request):
     for i in invoice: 
         i.Inv_items = Sells.objects.filter(user=user).filter(Inv_number = i).count()   
         i.Inv_status = "Paid" if i.Inv_due_bill_date <= date.today() else "Pending"
-        i.Customer_name = Customer.objects.filter(user=user).filter(Customer_mobile = i.Customer_number).first().Customer_name
+        if  Customer.objects.filter(user=user).filter(Customer_mobile = i.Customer_number).exists():
+            i.Customer_name = Customer.objects.filter(user=user).filter(Customer_mobile = i.Customer_number).first().Customer_name 
+        else :
+            i.Customer_name = "Unknown"
+        inv.Inv_items = Sells.objects.filter(user=user).filter(Inv_number = i).count()
     data = {
         "inv" : invoice,
         "total_inv": inv.count(),

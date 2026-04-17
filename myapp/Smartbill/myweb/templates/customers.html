@@ -128,7 +128,7 @@
                 <form id="deletecustomer">
                   {% csrf_token %}
                   <button type="submit" id="deletecustomer_Customer_id" name="Customer_id" value="{{ c.id }}"
-                    class="btn btn-sm btn-outline-danger py-0">
+                    class="btn btn-sm btn-outline-danger py-0" onclick="return confirm('Are you sure you want to delete this customer? This action cannot be undone.');">
                     <i class="bi bi-trash3"></i>
                   </button>
                 </form>
