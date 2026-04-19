@@ -13,12 +13,14 @@ from myweb.models import *
 from django.db.models import Sum
 
 def home(request):
+    # if user is already authenticated redirect to dashboard
     if request.user.is_authenticated:
         return redirect('/dashboard/')
     context = {"page":"home"}
     return render(request,'index.html',context)
 
 def about(request):
+    # if user is already authenticated redirect to dashboard
     if request.user.is_authenticated:
         return redirect('/dashboard/')
     context = {"page":"home"}
@@ -26,6 +28,7 @@ def about(request):
 
 @login_required(login_url="/signin/")
 def billing(request):
+    # Generate new invoice 
     inv = Invoice.objects.filter(user = request.user).order_by('-id').first()
     inv_number = int(inv.Inv_number) + 1 if inv else 1
     today = date.today()
@@ -39,6 +42,7 @@ def billing(request):
         "inv_format": inv_format,
         "products": products
     }
+    # Process invoice form submission
     if request.method == "POST":
         Customer_mobile = request.POST.get("Customer_number")
         Customer_name = request.POST.get("Customer_name")
@@ -116,6 +120,7 @@ def billing(request):
 @csrf_protect
 @login_required(login_url="/signin/")   
 def getcustomer(request):
+    # Get customer name by mobile number for auto-fill in billing form
     if request.method == "POST":
         Customer_mobile = request.POST.get("Customer_mobile")     
         customer_name = Customer.objects.filter(user=request.user).filter(Customer_mobile = Customer_mobile).first().Customer_name
@@ -127,6 +132,7 @@ def getcustomer(request):
 
 @login_required(login_url="/signin/")
 def dashboard(request):
+    # Generate dashboard data and statistics
     initials = request.user.first_name[0].upper() + request.user.last_name[0].upper() if request.user.first_name and request.user.last_name else "U"
     inv = Invoice.objects.filter(user = request.user)
     today_sales = inv.filter(Inv_bill_date = date.today()).aggregate(total=Sum('Inv_Total'))['total'] or 0
@@ -164,6 +170,7 @@ def dashboard(request):
 
 @login_required(login_url="/signin/")   
 def customers(request):
+    # Generate customer list and statistics for dashboard
     user = request.user   
     Cust  = Customer.objects.filter(user=user).order_by('-id')
     cust_new_this_week =0
@@ -190,6 +197,7 @@ def customers(request):
 @csrf_protect
 @login_required(login_url="/signin/")   
 def editcustomer(request):
+    # Edit customer details from customer list page
     if request.method == "POST":
         Customer_name = request.POST.get("Customer_name")
         Customer_mobile = request.POST.get("Customer_mobile")
@@ -205,6 +213,7 @@ def editcustomer(request):
 @csrf_protect
 @login_required(login_url="/signin/")   
 def addcustomer(request):
+    # Add new customer from customer list page
     if request.method == "POST":
         user =request.user
         Customer_name = request.POST.get("Customer_name")
@@ -221,6 +230,7 @@ def addcustomer(request):
     
 @login_required(login_url="/signin/")   
 def deletecustomer(request):
+    # Delete customer from customer list page
     if request.method == "POST":
         User = request.user
         Customer_id = request.POST.get("Customer_id")
@@ -234,6 +244,7 @@ def deletecustomer(request):
  
 @login_required(login_url="/signin/")
 def invoice(request, inv_id):
+    # Generate invoice details for invoice view page
     user = request.user
     inv = Invoice.objects.filter(user = request.user).filter(id = inv_id).first()  
     formet = Formet.objects.filter(user = user).first()
@@ -270,6 +281,7 @@ def invoice(request, inv_id):
 
 @login_required(login_url="/signin/")
 def products(request):
+    # Generate product list and stock status for products page
     User = request.user
     prod = Products.objects.filter(user=User)
     prod_count = prod.count()
@@ -301,6 +313,7 @@ def products(request):
 
 @login_required(login_url="/signin/")   
 def editproducts(request):
+    # Edit product details from products page
     if request.method == "POST":
         id = request.POST.get("id")
         Name = request.POST.get("Name")
@@ -318,6 +331,7 @@ def editproducts(request):
 @csrf_protect
 @login_required(login_url="/signin/")   
 def addproducts(request):
+    # Add new product from products page
     if request.method == "POST":
         Name = request.POST.get("Name")
         Price = request.POST.get("Price")
@@ -335,6 +349,7 @@ def addproducts(request):
     
 @login_required(login_url="/signin/")   
 def deleteproducts(request):
+    # Delete product from products page
     if request.method == "POST":
         Products_id = request.POST.get("Products_id")
         User = request.user
@@ -346,6 +361,7 @@ def deleteproducts(request):
 
 @login_required(login_url="/signin/")
 def reports(request):
+    # Generate sales reports and analytics for reports page
     Inv = Invoice.objects.filter(user = request.user)
     total_revenue = 0
     total_gst =0
@@ -419,6 +435,7 @@ def reports(request):
 
 @login_required(login_url="/signin/")
 def sales_history(request):
+    # Generate sales history and invoice list for sales history page
     user = request.user
     inv = Invoice.objects.filter(user =user)
     total_coll = 0
@@ -454,6 +471,7 @@ def sales_history(request):
 @csrf_protect
 @login_required(login_url="/signin/")
 def invoice_h(request):
+    # Redirect to invoice view page when invoice number is searched from sales history page
     if request.method == "POST":
         inv_number = request.POST.get("inv_number")
         inv = Invoice.objects.filter(user = request.user).filter(Inv_number = inv_number).first()
@@ -463,6 +481,7 @@ def invoice_h(request):
 
 @login_required(login_url="/signin/")
 def settings(request): 
+    # Generate business and invoice format details for settings page
     user = request.user
     biz = Business.objects.filter(user = user).first()
     format = Formet.objects.filter(user = user).first()
@@ -472,7 +491,7 @@ def settings(request):
 @csrf_protect
 @login_required(login_url="/signin/")
 def editbiz(request):
-    # ediit business details
+    # edit business details
     if request.method == "POST":
         bizName = request.POST.get("bizName")
         full_name = request.POST.get("full_name")
@@ -540,6 +559,7 @@ def edituser(request):
  
 @csrf_protect
 def signin(request):
+    # Process user authentication and login
     if request.method =="POST":
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -558,6 +578,7 @@ def signin(request):
 
 @csrf_protect
 def signup(request):
+    # Process user registration and create associated business and invoice format records
     if request.method == 'POST':
         first_name = request.POST.get("first_name") 
         last_name = request.POST.get("last_name") 
@@ -572,7 +593,7 @@ def signup(request):
         user= User.objects.filter(username = username)
         if  user.exists() :
             messages.info(request, 'username is alraedy register')
-            return redirect('/signup/')
+            return render(request,'signup.html',context)
         
         user = User.objects.create(
             first_name = first_name,
@@ -607,6 +628,7 @@ def signup(request):
 
 @login_required(login_url="/signin/")
 def Signout(request):
+    # User logout and redirect to sign-in page
     logout(request)
     return redirect('/signin/')
 
