@@ -179,7 +179,7 @@ def customers(request):
             cust_new_this_week += 1
     cust_total = Cust.count()
     T_revenue = 0
-    Inv = Invoice.objects.filter(user = request.user)
+   
     for i in Inv:
         T_revenue += i.Inv_Total
     for c in Cust:
